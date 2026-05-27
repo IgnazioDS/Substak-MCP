@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: ❤️ Sponsor Substak-MCP
+    url: https://github.com/sponsors/IgnazioDS
+    about: Support continued development of Substak-MCP via GitHub Sponsors.
+  - name: 📖 Read the docs (README)
+    url: https://github.com/IgnazioDS/Substak-MCP#readme
+    about: Setup, MCP client configuration, tools, and example prompts.
+  - name: 🔐 Security policy
+    url: https://github.com/IgnazioDS/Substak-MCP/security/policy
+    about: For security issues, please use the security policy instead of a public issue.
