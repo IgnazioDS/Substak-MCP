@@ -77,7 +77,7 @@
 ## Technical Limitations
 
 ### API Limitations
-Since Substack does not provide an official public API, we rely on reverse-engineered endpoints which may:
+Since Substack does not provide an official public API, I rely on reverse-engineered endpoints which may:
 - Change without notice
 - Have undocumented rate limits
 - Behave differently than expected
@@ -99,7 +99,7 @@ Since Substack does not provide an official public API, we rely on reverse-engin
 If you discover an issue not listed here:
 
 1. Check existing [GitHub Issues](https://github.com/IgnazioDS/Substak-MCP/issues)
-2. Create a new issue using our bug report template
+2. Create a new issue using the bug report template in this repository
 3. Include:
    - Steps to reproduce
    - Expected behavior
@@ -110,21 +110,21 @@ If you discover an issue not listed here:
 ## Workaround Strategies
 
 ### For Formatting Issues
-1. Create your draft with our tools
+1. Create your draft with the tools in this MCP
 2. Use Substack's web editor for final formatting touches
 3. Preview before publishing
 
 ### For Complex Posts
-1. Use our tools for basic structure and content
+1. Use the MCP for basic structure and content
 2. Add advanced features (embeds, custom formatting) via web interface
-3. Schedule publication through our tools after web edits
+3. Schedule publication through the MCP after web edits
 
 ## Future Improvements
 
-We're actively working on:
+I still want to improve:
 - Better text formatting support
 - Improved error messages
 - Rate limiting implementation
 - Enhanced blockquote and list handling
 
-Track progress in our [GitHub Issues](https://github.com/IgnazioDS/Substak-MCP/issues).
+Track progress in the [GitHub Issues](https://github.com/IgnazioDS/Substak-MCP/issues).

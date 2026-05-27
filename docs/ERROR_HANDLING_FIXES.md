@@ -1,6 +1,6 @@
 # Error Handling Fixes Summary
 
-This document consolidates the journey of fixing critical errors in the Substack MCP Plus project, particularly the "'str' object has no attribute 'get'" errors that affected multiple tools.
+This document captures the debugging path I used to fix critical errors in Substack MCP Plus, especially the `"'str' object has no attribute 'get'"` failures that affected multiple tools.
 
 ## The Problem
 
@@ -13,19 +13,19 @@ Initial testing revealed that several account tools were failing with cryptic er
 ## The Journey
 
 ### Round 1-2: Initial Misdiagnosis
-**What we thought**: The python-substack library was returning string errors instead of proper exceptions.
+**What I thought**: The python-substack library was returning string errors instead of proper exceptions.
 
-**What we did**: 
+**What I did**: 
 - Created `api_wrapper.py` to handle string errors
 - Added defensive programming with type checking
 - Wrapped all API calls with error handling
 
-**Result**: Errors persisted - we were solving the wrong problem.
+**Result**: Errors persisted. I was solving the wrong problem.
 
 ### Round 3-4: Infrastructure Building
-**What we learned**: The library uses proper exceptions, not string errors.
+**What I learned**: The library uses proper exceptions, not string errors.
 
-**What we did**:
+**What I did**:
 - Enhanced error handling across all handlers
 - Added comprehensive logging
 - Created validation methods
@@ -33,7 +33,7 @@ Initial testing revealed that several account tools were failing with cryptic er
 **Result**: Better error messages, but core issues remained.
 
 ### Round 5-7: Deeper Investigation
-**Discovery**: Through testing with a known post (Homer Simpson post ID: 167669176), we found:
+**Discovery**: Through testing with a known post (Homer Simpson post ID: 167669176), I found:
 - The tool was retrieving data successfully
 - But `get_post_content` showed empty content
 - Debug revealed: `body` field was a JSON string, not a dictionary
@@ -83,9 +83,9 @@ Added support for actual Substack JSON structure:
 
 ## Key Learnings
 
-1. **Always verify assumptions**: We assumed the API returned dictionaries, but some fields were JSON strings
+1. **Always verify assumptions**: I assumed the API returned dictionaries, but some fields were JSON strings
 2. **Debug with real data**: Using actual post IDs revealed the true data structure
-3. **Read the actual response**: The library wasn't broken - we just weren't handling the data correctly
+3. **Read the actual response**: The library wasn't broken. I just wasn't handling the data correctly
 4. **Substack's content format**: 
    - Published posts: `body` field
    - Draft posts: `draft_body` field
@@ -93,7 +93,7 @@ Added support for actual Substack JSON structure:
 
 ## Current Status
 
-All tools now working correctly:
+At this stage, these tools are working correctly:
 - ✅ `update_post` - Persists changes properly
 - ✅ `get_post_content` - Returns full formatted content
 - ✅ `preview_draft` - Returns preview URLs

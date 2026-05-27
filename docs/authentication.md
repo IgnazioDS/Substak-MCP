@@ -6,7 +6,7 @@ password, magic-link, or email-verification steps normally.
 
 ## 🚀 Quick Setup (Recommended)
 
-The easiest way to set up authentication is using our interactive setup wizard:
+The setup path I recommend is the interactive setup wizard included in this repo:
 
 ```bash
 substack-mcp-plus-setup
@@ -45,7 +45,7 @@ For local development from the repository, use:
 
 ## 🔐 How It Works
 
-Our authentication system uses a three-tier approach for maximum reliability:
+I designed the authentication flow with three layers so it stays usable when one path fails:
 
 1. **Secure Browser Session Storage** (Primary)
    - Session cookies are encrypted and stored at `~/.substack-mcp-plus/auth.json`

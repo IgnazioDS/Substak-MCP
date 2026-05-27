@@ -1,10 +1,10 @@
 # The Vision for Substack MCP Plus
 
-## 🎯 Our Mission
+## 🎯 Why I Maintain This
 
 **To make publishing as frictionless as thinking.**
 
-When ideas can flow from mind to publication without barriers, creativity thrives. This project exists to eliminate every obstacle between inspiration and publication.
+When ideas can move from mind to publication without friction, more of them survive. I maintain this project to remove as many obstacles as I can between inspiration and publication.
 
 ## 🌍 Who This Is For
 
@@ -18,7 +18,7 @@ You're a writer, researcher, entrepreneur, or thinker with more ideas than time.
 - **Freedom**: Focus on ideas, not publishing mechanics
 
 ### For Development Teams
-> "We need reliable publishing automation for our content pipeline."
+> "I need reliable publishing automation in a real workflow."
 
 You're building content systems, automation workflows, or AI applications. You need:
 - **Reliability**: 320+ tests, 72% coverage, and explicit live-smoke gates for account tools
@@ -64,30 +64,30 @@ You're exploring AI-assisted development, no-code solutions, or the future of so
 ## 💡 Core Principles
 
 ### 1. Friction Kills Creativity
-Every extra step between idea and publication is a chance for procrastination, perfectionism, or abandonment. We ruthlessly eliminate friction.
+Every extra step between idea and publication is a chance for procrastination, perfectionism, or abandonment. I want this project to remove that friction wherever it can.
 
 ### 2. AI Should Augment, Not Replace
 This tool amplifies human creativity. AI handles the mechanical parts (formatting, publishing, scheduling) so humans can focus on ideas.
 
 ### 3. Open Source Enables Innovation
-By sharing this freely, we enable thousands of developers to build upon it, creating solutions we haven't even imagined.
+By keeping this open, I make it easier for other developers and creators to build on top of it in ways I would never design alone.
 
 ### 4. Quality Matters
-Just because it's built with AI doesn't mean it should be inferior. Our TDD approach ensures enterprise-grade reliability.
+Just because AI helped build this does not mean the result should be sloppy. I want the test discipline here to keep the repo honest.
 
 ## 🤝 How You Can Help
 
 ### Use It and Share Feedback
-The best way to improve is through real-world usage. Tell us what works, what doesn't, and what you wish it could do.
+The fastest way to improve this project is real-world usage. Tell me what works, what breaks, and what still feels clumsy.
 
 ### Contribute Code
-Whether it's fixing bugs, adding features, or improving documentation, every contribution makes this better for everyone.
+Whether it is a bug fix, a feature, or a documentation cleanup, good contributions make the project more useful.
 
 ### Share Your Story
-Did this tool help you publish more? Build something cool on top of it? We'd love to hear about it.
+If this tool helped you publish more or build something interesting, I want to hear about it.
 
 ### Spread the Word
-If this helps you, it might help others. Share it with creators who could benefit from frictionless publishing.
+If it helps you, share it with other creators who would benefit from less publishing friction.
 
 ## 🎬 The Ultimate Vision
 
@@ -101,16 +101,10 @@ This isn't just about Substack or newsletters. It's about fundamentally changing
 
 ## 📝 A Personal Note
 
-I built this because I needed it. As someone who hadn't coded since 2018, using AI to build this tool was both an experiment and a necessity. The fact that it works - and works well - proves something important:
+I keep working on this because I want the repo to be genuinely useful in real publishing workflows, not just technically clever. I care about turning it into something dependable enough that I would trust it in my own stack.
 
 **The future of software isn't about knowing how to code. It's about knowing what to build and why.**
 
-If you have ideas trapped in your head, this tool is for you. If you want to build on this foundation, this code is for you. If you're curious about AI-assisted development, this project is for you.
-
-Let's ship more ideas, together.
+If you have ideas trapped in your head, I want this repo to help you ship them faster. If you want to build on the foundation, I want the code to be clear enough to support that.
 
 ---
-
-*"I was the equivalent of Homer Simpson running the nuclear power plant, approving things I wasn't exactly sure about. But with good tests and Claude's help, we built something amazing. You can too."*
-
-— Thunder Chief, Creator of Substack MCP Plus

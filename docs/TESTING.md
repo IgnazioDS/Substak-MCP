@@ -1,6 +1,6 @@
 # 🧪 Comprehensive Testing Suite
 
-The Substack MCP Plus project includes an extensive testing suite that was crucial during development, especially when troubleshooting authentication issues and ensuring all formatting features work correctly.
+I use this testing suite to keep the repo honest, especially around authentication, formatting, and the brittle parts of the Substack integration.
 
 ## 📁 Test Structure
 
@@ -168,7 +168,7 @@ Comprehensive formatting tests:
 
 ## 🛠️ Testing Utilities
 
-During development, we created several helpful testing utilities:
+While building and auditing the repo, I ended up with several testing utilities that are still useful:
 
 ### `debug_auth.py`
 Standalone authentication tester:
@@ -327,7 +327,7 @@ When adding features:
    - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
    - **Linux**: `~/.config/Claude/claude_desktop_config.json`
 
-   Add our server configuration:
+   Add the server configuration:
    ```json
    {
      "mcpServers": {
@@ -524,4 +524,4 @@ After running `generate_test_content.py`:
 | `technical_post.md` | Real blog post example | Code blocks, tables |
 | `newsletter.md` | Newsletter format | Mixed content types |
 
-The comprehensive test suite was instrumental in achieving a reliable, production-ready MCP server. It caught numerous edge cases and helped us iterate quickly during the development process.
+This test suite is one of the main reasons I trust the current repo state more than the typical reverse-engineered integration. It catches edge cases early and makes regressions visible fast.

@@ -234,7 +234,7 @@ Based on comprehensive testing (July 8-9, 2025), these bugs need immediate atten
 2. **Comment on issue**: If an issue exists, comment that you're working on it
 3. **Create issue**: If no issue exists, create one referencing this TODO item
 4. **Update this file**: Submit a PR updating "Claimed by" with your GitHub username
-5. **Start work**: Follow our [Contributing Guide](../CONTRIBUTING.md)
+5. **Start work**: Follow the [Contributing Guide](../CONTRIBUTING.md)
 
 ## Adding New Tasks
 

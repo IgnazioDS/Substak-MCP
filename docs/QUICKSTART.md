@@ -1,6 +1,6 @@
 # Substack MCP Plus - Quick Start Guide
 
-Get up and running with Substack MCP Plus in under 2 minutes!
+This is the fastest setup path I recommend for Substack MCP Plus.
 
 ## 🚀 Quick Setup
 
@@ -12,7 +12,7 @@ npm install -g github:IgnazioDS/Substak-MCP
 substack-mcp-plus-setup
 ```
 
-**That's it!** The setup wizard handles everything:
+The setup wizard handles the heavy lifting:
 - ✅ Choice of magic link or password authentication
 - ✅ Browser-based login
 - ✅ CAPTCHA handling
@@ -155,4 +155,4 @@ export SUBSTACK_PUBLICATION_URL="https://YOUR_PUBLICATION.substack.com"
 
 ---
 
-**Need help?** The authentication system provides clear error messages and guidance. For most issues, running `substack-mcp-plus-setup` will solve the problem!
+**Need help?** I kept the setup flow opinionated on purpose. In most cases, rerunning `substack-mcp-plus-setup` is the right fix.
