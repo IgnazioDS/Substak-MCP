@@ -1,3 +1,25 @@
+<p align="center">
+  <a href="https://github.com/IgnazioDS/Substak-MCP/stargazers"><img src="https://img.shields.io/github/stars/IgnazioDS/Substak-MCP?style=for-the-badge&logo=github&color=ffb400" alt="GitHub stars"></a>
+  <a href="https://github.com/IgnazioDS/Substak-MCP/network/members"><img src="https://img.shields.io/github/forks/IgnazioDS/Substak-MCP?style=for-the-badge&logo=github" alt="GitHub forks"></a>
+  <a href="https://github.com/IgnazioDS/Substak-MCP/issues"><img src="https://img.shields.io/github/issues/IgnazioDS/Substak-MCP?style=for-the-badge" alt="GitHub issues"></a>
+  <a href="https://github.com/IgnazioDS/Substak-MCP/blob/main/LICENSE"><img src="https://img.shields.io/github/license/IgnazioDS/Substak-MCP?style=for-the-badge&color=blue" alt="MIT License"></a>
+  <a href="https://github.com/sponsors/IgnazioDS"><img src="https://img.shields.io/badge/Sponsor-%E2%9D%A4-ff69b4?style=for-the-badge&logo=githubsponsors" alt="Sponsor"></a>
+</p>
+
+<p align="center">
+  <b>Substack MCP server for AI clients</b> &mdash; draft, publish, schedule, analyze, and research Substack publications from <b>Claude</b>, <b>Cursor</b>, <b>Codex</b>, <b>Windsurf</b>, <b>Antigravity</b>, and any Model Context Protocol client.
+</p>
+
+<p align="center">
+  <a href="#install">Install</a> &nbsp;•&nbsp;
+  <a href="#first-time-setup">Setup</a> &nbsp;•&nbsp;
+  <a href="#mcp-client-config">Clients</a> &nbsp;•&nbsp;
+  <a href="#tool-list">Tools</a> &nbsp;•&nbsp;
+  <a href="#sponsor-this-project">❤ Sponsor</a>
+</p>
+
+---
+
 # Substack MCP
 
 An MCP server for Substack that lets AI clients work with your publication and research public Substack content.
@@ -346,6 +368,23 @@ node src/index.js
 - Re-run authentication if a stored Substack session expires.
 
 See [SECURITY.md](SECURITY.md) for project security notes.
+
+## 💖 Sponsor This Project
+
+Substak‑MCP is built and maintained in the open by [@IgnazioDS](https://github.com/IgnazioDS). If your team relies on it, or you'd like to support continued development of new tools, integrations, and improvements, please consider sponsoring:
+
+- ❤️ **GitHub Sponsors:** https://github.com/sponsors/IgnazioDS
+
+Sponsorships fund ongoing maintenance, new features (more MCP clients, deeper Substack analytics, smarter research tools), bug fixes, and community support. Even a small monthly tier makes a real difference.
+
+### Other Ways To Help
+
+- ⭐ Star this repository so other Substack writers and AI builders can find it.
+- 🐦 Share it with creators using Claude, Cursor, Codex, Windsurf, or any MCP client.
+- 🐛 [Open an issue](https://github.com/IgnazioDS/Substak-MCP/issues) for bugs or feature requests.
+- 🔀 Submit a pull request — contributions are very welcome.
+
+---
 
 ## License
 
