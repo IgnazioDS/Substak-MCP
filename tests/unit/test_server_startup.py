@@ -43,7 +43,10 @@ def test_list_tools_has_no_dead_dispatch_only_entries():
     tool_names = {tool.name for tool in result.root.tools}
 
     assert "debug_post_structure" not in tool_names
-    assert len(tool_names) == 26
+    assert "get_publication_rss_feed" in tool_names
+    assert "get_substack_integration_options" in tool_names
+    assert "search_substack_profiles_by_linkedin" in tool_names
+    assert len(tool_names) == 29
 
 
 def test_server_tracks_list_and_dispatch_tool_names_in_lockstep():
@@ -51,4 +54,11 @@ def test_server_tracks_list_and_dispatch_tool_names_in_lockstep():
     server = SubstackMCPServer()
 
     assert server._listed_tool_names == server._dispatch_tool_names
-    assert len(server._listed_tool_names) == 26
+    assert len(server._listed_tool_names) == 29
+
+
+async def test_server_init_is_safe_inside_running_event_loop():
+    """Server initialization should not try to nest a second event loop."""
+    server = SubstackMCPServer()
+
+    assert server._listed_tool_names == server._dispatch_tool_names
