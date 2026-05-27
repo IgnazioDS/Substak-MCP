@@ -1,0 +1,78 @@
+name: "🐛 Bug Report"
+description: Report a problem with Substak-MCP (tools, install, MCP client integration, Substack interactions).
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug report. The more detail you give us, the faster we can help.
+        If you have a question instead of a bug, please open a Discussion or check the README first.
+  - type: input
+    id: mcp-client
+    attributes:
+      label: MCP client
+      description: Which MCP client are you using?
+      placeholder: e.g. Claude Desktop 0.9.x, Claude Code, Cursor, Codex, Windsurf, Antigravity
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: e.g. macOS 14.5, Windows 11, Ubuntu 22.04
+    validations:
+      required: true
+  - type: input
+    id: node-version
+    attributes:
+      label: Node.js version
+      placeholder: "e.g. 20.11.1 (run: node --version)"
+    validations:
+      required: true
+  - type: input
+    id: python-version
+    attributes:
+      label: Python version
+      placeholder: "e.g. 3.11.7 (run: python3 --version)"
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear, concise description of the bug.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: List the exact prompts, configs, or commands you ran.
+      placeholder: |
+        1. Configure server in client...
+        2. Run prompt "..."
+        3. See error
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / error output
+      description: Paste any relevant logs. Please redact tokens and personal info.
+      render: shell
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Checks
+      options:
+        - label: I have searched existing issues and discussions.
+          required: true
+        - label: I am not posting Substack credentials, tokens, or personal subscriber data.
+          required: true
