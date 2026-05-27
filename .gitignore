@@ -1,0 +1,14 @@
+# ABOUTME: Ignore local build artifacts, caches, and environment files for the repository.
+# ABOUTME: Keeps commits focused on source, tests, docs, and release metadata.
+
+.DS_Store
+.coverage
+.mypy_cache/
+.pytest_cache/
+__pycache__/
+*.py[cod]
+
+venv/
+.venv/
+
+substack_mcp_plus.egg-info/
