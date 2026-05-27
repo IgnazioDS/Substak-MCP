@@ -21,8 +21,8 @@ This file describes the behavior the repository actually ships today.
 ## Public research tools
 
 - Fetch and parse a publication's official RSS feed.
-- Describe officially supported integration surfaces for publications, posts, and notes.
-- Query Substack's Developer API for public profile matches by LinkedIn handle.
+- Describe the limited documented integration surfaces for publications, posts, and notes.
+- Query Substack's narrow Help Center documented Developer API for public profile matches by LinkedIn handle.
 - Search for public Substack posts and publications.
 - Inspect a public post URL.
 - Inspect a public publication URL.
@@ -31,6 +31,7 @@ This file describes the behavior the repository actually ships today.
 
 ### Research limitations
 
+- Substack does not appear to offer a broad public developer portal or general public API. This project only treats RSS plus a narrow Help Center documented profile lookup as semi-official surfaces.
 - Developer API profile search may require prior Substack approval and a token even though the returned data is public read-only.
 - Research tools use public HTML only; they do not access private publication data.
 - Results depend on what search providers and public pages expose.

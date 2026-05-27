@@ -4,7 +4,7 @@ An MCP server for Substack that lets AI clients work with your publication and r
 
 It supports:
 - authenticated account tools for drafts, publishing, scheduling, previews, sections, and post analytics
-- official developer-surface tools for RSS feeds, embeds, and profile lookup
+- limited documented integration tools for RSS feeds, embeds, and profile lookup
 - public research tools for finding, analyzing, and studying Substack posts and publications
 - content strategy tools for ideas, hooks, repurposing, gap analysis, and series planning
 
@@ -28,8 +28,8 @@ With your own Substack account:
 
 With public Substack content:
 - fetch a publication's RSS feed
-- inspect official Substack integration options for a publication, post, or note
-- look up public Substack profiles by LinkedIn handle through Substack's Developer API
+- inspect the limited documented Substack integration options for a publication, post, or note
+- look up public Substack profiles by LinkedIn handle through Substack's narrow help-documented Developer API
 - research a topic across Substack
 - analyze a public post URL
 - analyze a publication URL
@@ -214,7 +214,7 @@ After updating the config, fully restart the client.
 ### Research Workflows
 
 - `Fetch the RSS feed for https://example.substack.com`
-- `What official integration options does https://example.substack.com support?`
+- `What documented integration options does https://example.substack.com support?`
 - `Search Substack profiles for LinkedIn handle johndoe`
 - `Research Substack for swiftui image caching`
 - `Research this Substack post: https://www.oneusefulthing.org/p/change-blindness`
@@ -261,6 +261,7 @@ These are the current honest limits, not marketing wallpaper:
 - `extract_coding_lessons` is heuristic summarization, not a structured extractor.
 - Public research tools only work on public pages that are reachable and parseable, identify themselves with a project User-Agent, and honor `robots.txt`.
 - `search_substack_profiles_by_linkedin` may require prior Developer API approval and a token. If anonymous requests fail, set `SUBSTACK_DEVELOPER_API_TOKEN` or pass `developer_api_token` directly to the tool.
+- Substack does not appear to offer a broad public developer portal. The repo only treats RSS plus a narrow Help Center documented profile-lookup endpoint as semi-official surfaces; most account tools still depend on internal or reverse-engineered behavior.
 
 For a real-account release audit, use the live smoke guidance in [docs/LIVE_SMOKE_TEST.md](docs/LIVE_SMOKE_TEST.md).
 

@@ -1,5 +1,5 @@
-# ABOUTME: Official developer-surface handler for Substack feeds, embeds, and API discovery.
-# ABOUTME: Wraps documented public RSS and profile-search capabilities without account auth.
+# ABOUTME: Limited developer-surface handler for Substack feeds, embeds, and API discovery.
+# ABOUTME: Wraps RSS plus narrow help-documented profile-search capabilities without account auth.
 
 import os
 import xml.etree.ElementTree as ET
@@ -10,7 +10,7 @@ import aiohttp
 
 
 class DeveloperSurfaceHandler:
-    """Access officially documented Substack developer-facing surfaces."""
+    """Access limited documented Substack integration and profile-search surfaces."""
 
     RSS_SUPPORT_URL = (
         "https://support.substack.com/hc/en-us/articles/"
@@ -36,7 +36,7 @@ class DeveloperSurfaceHandler:
     async def get_publication_rss_feed(
         self, publication_url: str, limit: int = 10
     ) -> Dict[str, Any]:
-        """Fetch and parse the official public RSS feed for a publication."""
+        """Fetch and parse the Substack-supported public RSS feed for a publication."""
         normalized_url = self._normalize_http_url(
             publication_url, "publication_url must be a valid http(s) URL"
         )
@@ -174,7 +174,7 @@ class DeveloperSurfaceHandler:
     async def search_profiles_by_linkedin(
         self, linkedin_handle: str, developer_api_token: Optional[str] = None
     ) -> Dict[str, Any]:
-        """Call Substack's documented public developer API surface."""
+        """Call Substack's limited help-documented profile lookup surface."""
         handle = (linkedin_handle or "").strip().strip("/")
         if not handle:
             raise ValueError("linkedin_handle must be a non-empty string")
@@ -230,7 +230,7 @@ class DeveloperSurfaceHandler:
     async def _fetch_json(
         self, url: str, developer_api_token: Optional[str] = None
     ) -> Dict[str, Any]:
-        """Fetch JSON from a public documented API endpoint."""
+        """Fetch JSON from a limited help-documented profile lookup endpoint."""
         headers = {"Accept": "application/json"}
         if developer_api_token:
             headers["Authorization"] = f"Bearer {developer_api_token}"

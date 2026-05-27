@@ -449,7 +449,7 @@ class SubstackMCPServer:
                 ),
                 Tool(
                     name="get_publication_rss_feed",
-                    description="Fetch the official public RSS feed for a Substack publication and summarize its latest items.",
+                    description="Fetch the Substack-supported public RSS feed for a publication and summarize its latest items.",
                     inputSchema={
                         "type": "object",
                         "properties": {
@@ -468,7 +468,7 @@ class SubstackMCPServer:
                 ),
                 Tool(
                     name="get_substack_integration_options",
-                    description="Describe officially supported Substack developer surfaces for a publication, post, or note, including RSS feeds and embed flows.",
+                    description="Describe the limited documented Substack integration surfaces for a publication, post, or note, including RSS feeds and embed flows.",
                     inputSchema={
                         "type": "object",
                         "properties": {
@@ -480,7 +480,7 @@ class SubstackMCPServer:
                                 "type": "string",
                                 "enum": ["publication", "post", "note"],
                                 "default": "publication",
-                                "description": "Which official surface to describe for the URL.",
+                                "description": "Which documented surface to describe for the URL.",
                             },
                         },
                         "required": ["url"],
@@ -488,7 +488,7 @@ class SubstackMCPServer:
                 ),
                 Tool(
                     name="search_substack_profiles_by_linkedin",
-                    description="Call Substack's documented Developer API to look up public Substack profiles by LinkedIn handle. Provide a Developer API token directly or through SUBSTACK_DEVELOPER_API_TOKEN when your account requires it.",
+                    description="Call Substack's limited help-documented Developer API profile lookup by LinkedIn handle. Provide a Developer API token directly or through SUBSTACK_DEVELOPER_API_TOKEN when your account requires it.",
                     inputSchema={
                         "type": "object",
                         "properties": {

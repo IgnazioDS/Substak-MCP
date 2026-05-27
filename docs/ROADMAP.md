@@ -4,7 +4,7 @@
 
 ## 🎯 Project Vision
 
-Our goal is to make Substack MCP Plus the most powerful and reliable automation tool for Substack creators. The repository now ships a 29-tool MCP surface with rich text support, official developer-surface helpers, public research, and strategy helpers, but there is still meaningful release-readiness work ahead.
+Our goal is to make Substack MCP Plus the most powerful and reliable automation tool for Substack creators. The repository now ships a 29-tool MCP surface with rich text support, limited documented integration helpers, public research, and strategy helpers, but there is still meaningful release-readiness work ahead.
 
 ## 🚀 Next Steps We'd Love to See
 
