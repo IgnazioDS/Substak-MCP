@@ -57,6 +57,22 @@ def test_server_tracks_list_and_dispatch_tool_names_in_lockstep():
     assert len(server._listed_tool_names) == 29
 
 
+def test_tool_descriptions_do_not_overclaim_publish_or_sections_behavior():
+    """Listed tool descriptions should match what the code path actually does."""
+    server = SubstackMCPServer()
+    list_handler = server.server.request_handlers[ListToolsRequest]
+
+    result = asyncio.run(list_handler(ListToolsRequest()))
+    tools_by_name = {tool.name: tool for tool in result.root.tools}
+
+    publish_description = tools_by_name["publish_post"].description
+    sections_description = tools_by_name["get_sections"].description
+
+    assert "sends it via email if enabled" not in publish_description
+    assert "send to all subscribers" not in publish_description
+    assert "can be used when creating posts" not in sections_description
+
+
 async def test_server_init_is_safe_inside_running_event_loop():
     """Server initialization should not try to nest a second event loop."""
     server = SubstackMCPServer()

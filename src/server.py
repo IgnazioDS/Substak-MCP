@@ -247,7 +247,7 @@ class SubstackMCPServer:
                 ),
                 Tool(
                     name="publish_post",
-                    description="Publish a draft post immediately to your Substack publication. This makes the post publicly visible to subscribers and sends it via email if enabled. IMPORTANT: You MUST ALWAYS ask the user to confirm publishing in a follow-up message BEFORE calling this tool with confirm_publish=true. Never set confirm_publish=true on the first request, even if the user explicitly asks to publish. This action cannot be easily undone.",
+                    description="Publish a draft post immediately to your Substack publication. This makes the post live on your publication, but delivery behavior still depends on how Substack handles the publish call for your account. IMPORTANT: You MUST ALWAYS ask the user to confirm publishing in a follow-up message BEFORE calling this tool with confirm_publish=true. Never set confirm_publish=true on the first request, even if the user explicitly asks to publish. This action cannot be easily undone.",
                     inputSchema={
                         "type": "object",
                         "properties": {
@@ -425,7 +425,7 @@ class SubstackMCPServer:
                 ),
                 Tool(
                     name="get_sections",
-                    description="Get a list of available sections/categories in your Substack publication. Sections help organize your posts by topic or type. Returns section names and IDs that can be used when creating posts.",
+                    description="Get a list of available sections/categories in your Substack publication. Sections help organize your publication by topic or type. Returns section names and IDs for inspection.",
                     inputSchema={"type": "object", "properties": {}},
                 ),
                 Tool(
