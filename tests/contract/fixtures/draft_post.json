@@ -1,0 +1,28 @@
+{
+  "id": "draft-123",
+  "draft_title": "Draft Fixture",
+  "draft_subtitle": "Fixture subtitle",
+  "audience": "everyone",
+  "draft_body": {
+    "blocks": [
+      {
+        "type": "heading-one",
+        "content": [
+          {
+            "type": "text",
+            "content": "Fixture Heading"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "content": "Fixture paragraph"
+          }
+        ]
+      }
+    ]
+  }
+}
