@@ -1,0 +1,92 @@
+{
+  "name": "@ignaziods/substack-mcp-plus",
+  "version": "1.0.5",
+  "description": "Unofficial Substack MCP server with 29 tools, browser auth, rich text support, public research, and strategy helpers. Not affiliated with Substack Inc.",
+  "type": "module",
+  "main": "src/index.js",
+  "bin": {
+    "substack-mcp-plus": "src/index.js",
+    "substack-mcp-plus-setup": "src/setup.js"
+  },
+  "preferGlobal": true,
+  "scripts": {
+    "start": "node src/index.js",
+    "postinstall": "node scripts/postinstall.js",
+    "prepublishOnly": "python3 -m pytest -q -m \"not integration\" && ruff check src",
+    "version": "npm run format && git add -A src",
+    "postversion": "git push && git push --tags",
+    "format": "black src tests",
+    "test": "python3 -m pytest -q -m \"not integration\"",
+    "test:unit": "python3 -m pytest tests/unit/ -v",
+    "test:integration": "python3 -m pytest -v -m \"integration\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IgnazioDS/Substak-MCP.git"
+  },
+  "bugs": {
+    "url": "https://github.com/IgnazioDS/Substak-MCP/issues"
+  },
+  "homepage": "https://github.com/IgnazioDS/Substak-MCP#readme",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "mcpserver",
+    "claude",
+    "claude-desktop",
+    "anthropic",
+    "substack",
+    "newsletter",
+    "email-marketing",
+    "content-creation",
+    "ai",
+    "llm",
+    "automation",
+    "publishing",
+    "rich-text",
+    "wysiwyg",
+    "markdown",
+    "post",
+    "draft",
+    "schedule-posts",
+    "browser-auth",
+    "captcha",
+    "formatting"
+  ],
+  "author": {
+    "name": "IgnazioDS",
+    "url": "https://github.com/IgnazioDS"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "dependencies": {
+    "node-pty": "^1.0.0"
+  },
+  "files": [
+    "src/**/*.py",
+    "src/**/*.js",
+    "scripts/",
+    "setup_auth.py",
+    "setup.sh",
+    "pyproject.toml",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    "SECURITY.md",
+    "CONTRIBUTING.md",
+    "docs/QUICKSTART.md",
+    "docs/authentication.md",
+    "docs/formatting.md",
+    "docs/TESTING.md",
+    "docs/TROUBLESHOOTING.md",
+    "docs/FEATURES.md",
+    "docs/CONFIRMATION_SYSTEM.md",
+    "examples/"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}
