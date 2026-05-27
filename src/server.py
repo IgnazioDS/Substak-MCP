@@ -2,16 +2,20 @@
 # ABOUTME: Provides tools for creating, updating, publishing posts with rich formatting
 
 import asyncio
+import json
 import logging
+import secrets
 import sys
+from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional
 
-from mcp.server import Server
+from mcp.server import NotificationOptions, Server
 from mcp.server.models import InitializationOptions
 from mcp.server.stdio import stdio_server
 from mcp.types import EmbeddedResource, ImageContent, TextContent, Tool
 
 from src.handlers.auth_handler import AuthHandler
+from src.handlers.developer_surface_handler import DeveloperSurfaceHandler
 from src.handlers.image_handler import ImageHandler
 from src.handlers.post_handler import PostHandler
 from src.handlers.research_handler import ResearchHandler
@@ -30,15 +34,18 @@ logger = logging.getLogger(__name__)
 class SubstackMCPServer:
     """MCP server for Substack operations"""
 
-    def __init__(self):
+    CONFIRMATION_TTL = timedelta(minutes=5)
+
+    def __init__(self) -> None:
         """Initialize the MCP server"""
         self.server = Server("substack-mcp-plus")
         self._listed_tool_names: tuple[str, ...] = ()
         self._dispatch_tool_names: tuple[str, ...] = ()
+        self._confirmation_tokens: Dict[str, Dict[str, Any]] = {}
         self._initialize_handlers()
         self._register_handlers()
 
-    def _initialize_handlers(self):
+    def _initialize_handlers(self) -> None:
         """Initialize handlers that do not require account authentication.
 
         MCP clients call `tools/list` before any credentials are available to the
@@ -47,6 +54,7 @@ class SubstackMCPServer:
         """
         try:
             self.auth_handler: Optional[AuthHandler] = None
+            self.developer_surface_handler = DeveloperSurfaceHandler()
             self.research_handler = ResearchHandler()
             self.strategy_handler = StrategyHandler()
             logger.info("Non-auth handlers initialized; auth will be created lazily")
@@ -54,7 +62,7 @@ class SubstackMCPServer:
             logger.error(f"Failed to initialize handlers: {e}")
             raise
 
-    async def _get_authenticated_client(self):
+    async def _get_authenticated_client(self) -> Any:
         """Create the auth handler only when an account-bound tool is invoked."""
         if self.auth_handler is None:
             self.auth_handler = AuthHandler()
@@ -79,6 +87,9 @@ class SubstackMCPServer:
             "get_sections",
             "get_subscriber_count",
             "preview_draft",
+            "get_publication_rss_feed",
+            "get_substack_integration_options",
+            "search_substack_profiles_by_linkedin",
             "research_substack",
             "analyze_my_posts",
             "research_substack_post",
@@ -92,16 +103,84 @@ class SubstackMCPServer:
             "extract_coding_lessons",
         )
 
-    def _load_registered_tool_names(self, handle_list_tools) -> tuple[str, ...]:
-        """Resolve the tool names from the registered list_tools handler."""
-        loop = asyncio.new_event_loop()
-        try:
-            tools = loop.run_until_complete(handle_list_tools())
-        finally:
-            loop.close()
-        return tuple(tool.name for tool in tools)
+    def _prune_confirmation_tokens(self) -> None:
+        """Drop expired confirmation tokens."""
+        now = datetime.now(timezone.utc)
+        expired_tokens = [
+            token
+            for token, payload in self._confirmation_tokens.items()
+            if payload["expires_at"] <= now
+        ]
+        for token in expired_tokens:
+            del self._confirmation_tokens[token]
 
-    def _register_handlers(self):
+    def _normalized_confirmation_arguments(
+        self, arguments: Dict[str, Any], confirm_field: str
+    ) -> Dict[str, Any]:
+        """Return the arguments covered by a confirmation token."""
+        normalized = dict(arguments or {})
+        normalized.pop(confirm_field, None)
+        normalized.pop("confirmation_token", None)
+        return normalized
+
+    def _issue_confirmation_token(
+        self, tool_name: str, arguments: Dict[str, Any], confirm_field: str
+    ) -> str:
+        """Create a short-lived confirmation token for a write action."""
+        self._prune_confirmation_tokens()
+        token = secrets.token_urlsafe(18)
+        self._confirmation_tokens[token] = {
+            "tool_name": tool_name,
+            "arguments": self._normalized_confirmation_arguments(
+                arguments, confirm_field
+            ),
+            "expires_at": datetime.now(timezone.utc) + self.CONFIRMATION_TTL,
+        }
+        return token
+
+    def _validate_confirmation_token(
+        self, tool_name: str, arguments: Dict[str, Any], confirm_field: str
+    ) -> Optional[str]:
+        """Validate a confirmation token without consuming it."""
+        self._prune_confirmation_tokens()
+        token = arguments.get("confirmation_token")
+        if not token:
+            return "Error: A confirmation token is required before this action can run."
+
+        payload = self._confirmation_tokens.get(token)
+        if payload is None:
+            return "Error: Invalid or expired confirmation token."
+
+        normalized_arguments = self._normalized_confirmation_arguments(
+            arguments, confirm_field
+        )
+        if payload["tool_name"] != tool_name:
+            return "Error: Invalid or expired confirmation token."
+        if payload["arguments"] != normalized_arguments:
+            return (
+                "Error: Confirmation token arguments do not match the approved preview."
+            )
+
+        return None
+
+    def _consume_confirmation_token(self, token: str) -> None:
+        """Consume a confirmation token after a successful write action."""
+        self._confirmation_tokens.pop(token, None)
+
+    def _confirmation_message(
+        self, header: str, detail_lines: List[str], confirm_field: str, token: str
+    ) -> str:
+        """Build a standard confirmation preview message."""
+        lines = [header, "", *detail_lines, ""]
+        lines.append("Reply by recalling the same tool with:")
+        lines.append(f"- `{confirm_field}=true`")
+        lines.append(f"- `confirmation_token={token}`")
+        lines.append("")
+        lines.append(f"Confirmation token: {token}")
+        lines.append("This token expires in 5 minutes and can be used once.")
+        return "\n".join(lines)
+
+    def _register_handlers(self) -> None:
         """Register all handlers with the MCP server"""
 
         @self.server.list_tools()
@@ -187,7 +266,7 @@ class SubstackMCPServer:
                 ),
                 Tool(
                     name="schedule_post",
-                    description="Schedule a draft post for future publication on Substack. IMPORTANT: You MUST ALWAYS ask the user to confirm scheduling in a follow-up message BEFORE calling this tool with confirm_schedule=true. Never set confirm_schedule=true on the first request.",
+                    description="Schedule a draft post for future publication on Substack. This relies on a reverse-engineered private endpoint and should be treated as best-effort until verified on your publication. IMPORTANT: You MUST ALWAYS ask the user to confirm scheduling in a follow-up message BEFORE calling this tool with confirm_schedule=true. Never set confirm_schedule=true on the first request.",
                     inputSchema={
                         "type": "object",
                         "properties": {
@@ -248,16 +327,16 @@ class SubstackMCPServer:
                 ),
                 Tool(
                     name="upload_image",
-                    description="Upload an image file from your local computer to Substack's CDN and get a URL that can be used in posts. LIMITATION: Currently only supports uploading files from your local filesystem using a file path - cannot upload images directly from chat or clipboard. Supports common image formats (JPG, PNG, GIF, WebP). The returned URL can be used in markdown content as ![alt text](url).",
+                    description="Upload an image to Substack's CDN from either a local file path or a direct image URL. The server validates supported image content and rejects files larger than 25 MB before upload. The returned URL can be used in markdown content as ![alt text](url).",
                     inputSchema={
                         "type": "object",
                         "properties": {
-                            "image_path": {
+                            "source": {
                                 "type": "string",
-                                "description": "Full file path to the image file to upload. Must be a valid image file already saved on your local computer (e.g., /Users/you/Pictures/image.jpg). Cannot accept image data directly from chat.",
+                                "description": "Local file path or direct image URL to upload to Substack.",
                             }
                         },
-                        "required": ["image_path"],
+                        "required": ["source"],
                     },
                 ),
                 Tool(
@@ -356,7 +435,7 @@ class SubstackMCPServer:
                 ),
                 Tool(
                     name="preview_draft",
-                    description="Generate a preview link for a draft post that can be shared with others for feedback. The preview link allows others to read the draft without it being published.",
+                    description="Generate the best available preview link for a draft post. When Substack does not expose a shareable preview token, this returns an author-only preview/edit URL that requires you to be logged in.",
                     inputSchema={
                         "type": "object",
                         "properties": {
@@ -366,6 +445,63 @@ class SubstackMCPServer:
                             }
                         },
                         "required": ["post_id"],
+                    },
+                ),
+                Tool(
+                    name="get_publication_rss_feed",
+                    description="Fetch the official public RSS feed for a Substack publication and summarize its latest items.",
+                    inputSchema={
+                        "type": "object",
+                        "properties": {
+                            "publication_url": {
+                                "type": "string",
+                                "description": "Publication base URL such as https://example.substack.com.",
+                            },
+                            "limit": {
+                                "type": "integer",
+                                "description": "How many feed items to return. Default 10, max 25.",
+                                "default": 10,
+                            },
+                        },
+                        "required": ["publication_url"],
+                    },
+                ),
+                Tool(
+                    name="get_substack_integration_options",
+                    description="Describe officially supported Substack developer surfaces for a publication, post, or note, including RSS feeds and embed flows.",
+                    inputSchema={
+                        "type": "object",
+                        "properties": {
+                            "url": {
+                                "type": "string",
+                                "description": "Publication, post, or note URL to inspect.",
+                            },
+                            "target_type": {
+                                "type": "string",
+                                "enum": ["publication", "post", "note"],
+                                "default": "publication",
+                                "description": "Which official surface to describe for the URL.",
+                            },
+                        },
+                        "required": ["url"],
+                    },
+                ),
+                Tool(
+                    name="search_substack_profiles_by_linkedin",
+                    description="Call Substack's documented Developer API to look up public Substack profiles by LinkedIn handle. Provide a Developer API token directly or through SUBSTACK_DEVELOPER_API_TOKEN when your account requires it.",
+                    inputSchema={
+                        "type": "object",
+                        "properties": {
+                            "linkedin_handle": {
+                                "type": "string",
+                                "description": "LinkedIn handle such as johndoe from https://www.linkedin.com/in/johndoe.",
+                            },
+                            "developer_api_token": {
+                                "type": "string",
+                                "description": "Optional Substack Developer API token. If omitted, the server will use SUBSTACK_DEVELOPER_API_TOKEN when available.",
+                            },
+                        },
+                        "required": ["linkedin_handle"],
                     },
                 ),
                 Tool(
@@ -579,7 +715,7 @@ class SubstackMCPServer:
                 ),
                 Tool(
                     name="extract_coding_lessons",
-                    description="Extract coding or technical lessons from a research query or a specific public Substack URL.",
+                    description="Heuristically summarize coding or technical lessons from a research query or a specific public Substack URL.",
                     inputSchema={
                         "type": "object",
                         "properties": {
@@ -597,7 +733,7 @@ class SubstackMCPServer:
             ]
 
         async def collect_account_posts(
-            client, source: str = "published", limit: int = 10
+            client: Any, source: str = "published", limit: int = 10
         ) -> List[Dict[str, Any]]:
             source = (source or "published").lower()
             limit = max(1, min(limit, 15))
@@ -606,8 +742,12 @@ class SubstackMCPServer:
             if source == "drafts":
                 raw_posts = await post_handler.list_drafts(limit=limit)
             elif source == "all":
-                published = await post_handler.list_published(limit=max(1, limit // 2 or 1))
-                drafts = await post_handler.list_drafts(limit=max(1, limit - len(published)))
+                published = await post_handler.list_published(
+                    limit=max(1, limit // 2 or 1)
+                )
+                drafts = await post_handler.list_drafts(
+                    limit=max(1, limit - len(published))
+                )
                 raw_posts = (published + drafts)[:limit]
             else:
                 raw_posts = await post_handler.list_published(limit=limit)
@@ -631,7 +771,9 @@ class SubstackMCPServer:
                     collected.append(
                         {
                             "id": str(post_id),
-                            "title": post.get("title") or post.get("draft_title") or "Untitled",
+                            "title": post.get("title")
+                            or post.get("draft_title")
+                            or "Untitled",
                             "content": "",
                             "status": "published" if post.get("post_date") else "draft",
                         }
@@ -643,6 +785,7 @@ class SubstackMCPServer:
             name: str, arguments: Optional[Dict[str, Any]]
         ) -> List[TextContent | ImageContent | EmbeddedResource]:
             """Handle tool execution"""
+            arguments = arguments or {}
             try:
                 if name == "research_substack":
                     result = await self.research_handler.research_substack(
@@ -764,6 +907,95 @@ class SubstackMCPServer:
                     )
                     return [TextContent(type="text", text="\n".join(lines).strip())]
 
+                if name == "get_publication_rss_feed":
+                    result = (
+                        await self.developer_surface_handler.get_publication_rss_feed(
+                            arguments["publication_url"],
+                            limit=arguments.get("limit", 10),
+                        )
+                    )
+                    lines = [
+                        f"🛰️ Publication RSS Feed: {result['title'] or result['publication_url']}",
+                        "=" * 60,
+                        f"Publication URL: {result['publication_url']}",
+                        f"Feed URL: {result['feed_url']}",
+                    ]
+                    if result.get("description"):
+                        lines.append(f"Description: {result['description']}")
+                    lines.extend(["", "Latest Items:"])
+                    if result["items"]:
+                        for item in result["items"]:
+                            lines.append(f"- {item.get('title') or 'Untitled'}")
+                            if item.get("published_at"):
+                                lines.append(f"  Published: {item['published_at']}")
+                            if item.get("link"):
+                                lines.append(f"  URL: {item['link']}")
+                    else:
+                        lines.append("- No feed items were found.")
+                    return [TextContent(type="text", text="\n".join(lines).strip())]
+
+                if name == "get_substack_integration_options":
+                    result = (
+                        self.developer_surface_handler.get_official_integration_options(
+                            arguments["url"],
+                            target_type=arguments.get("target_type", "publication"),
+                        )
+                    )
+                    lines = [
+                        f"🧩 Substack Integration Options: {result['target_type']}",
+                        "=" * 60,
+                        f"Target URL: {result['target_url']}",
+                    ]
+                    if result.get("rss_feed_url"):
+                        lines.append(f"RSS Feed: {result['rss_feed_url']}")
+                    lines.extend(["", "Official Capabilities:"])
+                    for capability in result["official_capabilities"]:
+                        lines.append(f"- {capability['name']}")
+                        lines.append(f"  Availability: {capability['availability']}")
+                        lines.append(f"  Access: {capability['how_to_access']}")
+                    if result.get("support_links"):
+                        lines.extend(["", "Support Links:"])
+                        for link in result["support_links"]:
+                            lines.append(f"- {link['label']}: {link['url']}")
+                    return [TextContent(type="text", text="\n".join(lines).strip())]
+
+                if name == "search_substack_profiles_by_linkedin":
+                    result = await self.developer_surface_handler.search_profiles_by_linkedin(
+                        arguments["linkedin_handle"],
+                        developer_api_token=arguments.get("developer_api_token"),
+                    )
+                    lines = [
+                        f"👤 Substack Profile Search: {result['linkedin_handle']}",
+                        "=" * 60,
+                    ]
+                    lines.append(
+                        "Developer token: "
+                        + (
+                            "provided"
+                            if result.get("used_developer_token")
+                            else "not provided"
+                        )
+                    )
+                    if result["matches"]:
+                        for match in result["matches"]:
+                            lines.append(
+                                f"- Handle: {match.get('identity_handle') or 'unknown'}"
+                            )
+                            if match.get("profile_url"):
+                                lines.append(f"  Profile: {match['profile_url']}")
+                            if match.get("follower_count") is not None:
+                                lines.append(f"  Followers: {match['follower_count']}")
+                            if match.get("rough_num_free_subscribers") is not None:
+                                lines.append(
+                                    "  Rough free subscribers: "
+                                    f"{match['rough_num_free_subscribers']}"
+                                )
+                    else:
+                        lines.append(
+                            "- No public Substack profile matches were returned."
+                        )
+                    return [TextContent(type="text", text="\n".join(lines).strip())]
+
                 if name == "series_planner":
                     plan = self.strategy_handler.series_plan(
                         topic=arguments["topic"],
@@ -784,35 +1016,37 @@ class SubstackMCPServer:
                         max_results=arguments.get("max_results", 20),
                         deep_read_count=arguments.get("deep_read_count", 5),
                     )
-                    plan = self.strategy_handler.study_topic_on_substack(
+                    study_plan = self.strategy_handler.study_topic_on_substack(
                         arguments["topic"], research
                     )
                     lines = [
-                        f"📚 Study Plan: {plan['topic']}",
+                        f"📚 Study Plan: {study_plan['topic']}",
                         "=" * 60,
                         "Themes to watch:",
                     ]
-                    if plan["themes"]:
+                    if study_plan["themes"]:
                         lines.extend(
                             [
                                 f"- {theme['theme']} ({theme['mentions']} mentions)"
-                                for theme in plan["themes"]
+                                for theme in study_plan["themes"]
                             ]
                         )
                     else:
                         lines.append("- No strong recurring themes were found.")
                     lines.extend(["", "Suggested Reading Order:"])
-                    if plan["study_order"]:
-                        for item in plan["study_order"]:
+                    if study_plan["study_order"]:
+                        for item in study_plan["study_order"]:
                             lines.append(f"{item['step']}. {item['title']}")
                             lines.append(f"   URL: {item['url']}")
                             lines.append(f"   Why: {item['why']}")
                     else:
                         lines.append("- No recommended reading order yet.")
-                    if plan.get("warnings"):
+                    if study_plan.get("warnings"):
                         lines.extend(["", "Warnings:"])
-                        lines.extend([f"- {warning}" for warning in plan["warnings"]])
-                    lines.extend(["", f"Study Tip: {plan['study_tip']}"])
+                        lines.extend(
+                            [f"- {warning}" for warning in study_plan["warnings"]]
+                        )
+                    lines.extend(["", f"Study Tip: {study_plan['study_tip']}"])
                     return [TextContent(type="text", text="\n".join(lines).strip())]
 
                 if name == "extract_coding_lessons":
@@ -850,6 +1084,41 @@ class SubstackMCPServer:
                         lines.append(f"  Lesson: {lesson['lesson']}")
                     return [TextContent(type="text", text="\n".join(lines).strip())]
 
+                if name == "create_formatted_post":
+                    confirm = arguments.get("confirm_create", False)
+                    if not confirm:
+                        content_preview = (
+                            arguments["content"][:200] + "..."
+                            if len(arguments["content"]) > 200
+                            else arguments["content"]
+                        )
+                        token = self._issue_confirmation_token(
+                            name, arguments, "confirm_create"
+                        )
+                        return [
+                            TextContent(
+                                type="text",
+                                text=self._confirmation_message(
+                                    "⚠️ CONFIRMATION REQUIRED ⚠️",
+                                    [
+                                        "You are about to CREATE a new draft:",
+                                        f'- Title: "{arguments["title"]}"',
+                                        f'- Subtitle: "{arguments.get("subtitle", "[none]")}"',
+                                        f"- Content preview: {content_preview}",
+                                        "⚡ This will create a new draft in your Substack account.",
+                                    ],
+                                    "confirm_create",
+                                    token,
+                                ),
+                            )
+                        ]
+
+                    error = self._validate_confirmation_token(
+                        name, arguments, "confirm_create"
+                    )
+                    if error:
+                        return [TextContent(type="text", text=error)]
+
                 # Authenticate and get client for account-specific tools
                 client = await self._get_authenticated_client()
 
@@ -862,32 +1131,6 @@ class SubstackMCPServer:
                 logger.debug(f"Client has get_draft: {hasattr(client, 'get_draft')}")
 
                 if name == "create_formatted_post":
-                    confirm = arguments.get("confirm_create", False)
-
-                    if not confirm:
-                        # Show preview of what will be created
-                        content_preview = (
-                            arguments["content"][:200] + "..."
-                            if len(arguments["content"]) > 200
-                            else arguments["content"]
-                        )
-
-                        return [
-                            TextContent(
-                                type="text",
-                                text=f"⚠️ CONFIRMATION REQUIRED ⚠️\n\n"
-                                f"You are about to CREATE a new draft:\n"
-                                f"- Title: \"{arguments['title']}\"\n"
-                                f"- Subtitle: \"{arguments.get('subtitle', '[none]')}\"\n"
-                                f"- Content preview: {content_preview}\n\n"
-                                f"⚡ This will create a new draft in your Substack account.\n\n"
-                                f"Are you sure you want to create this draft?\n\n"
-                                f'To confirm, simply say "yes" or tell me to proceed.\n'
-                                f'To cancel, say "no" or tell me to stop.',
-                            )
-                        ]
-
-                    # Proceed with creation
                     post_handler = PostHandler(client)
                     result = await post_handler.create_draft(
                         title=arguments["title"],
@@ -895,6 +1138,7 @@ class SubstackMCPServer:
                         subtitle=arguments.get("subtitle"),
                         content_type="markdown",
                     )
+                    self._consume_confirmation_token(arguments["confirmation_token"])
                     return [
                         TextContent(
                             type="text",
@@ -904,6 +1148,12 @@ class SubstackMCPServer:
 
                 elif name == "update_post":
                     confirm = arguments.get("confirm_update", False)
+                    if confirm:
+                        error = self._validate_confirmation_token(
+                            name, arguments, "confirm_update"
+                        )
+                        if error:
+                            return [TextContent(type="text", text=error)]
 
                     if not confirm:
                         # Get the draft details to show what will be updated
@@ -938,18 +1188,24 @@ class SubstackMCPServer:
                                 else "- No changes specified"
                             )
 
+                            token = self._issue_confirmation_token(
+                                name, arguments, "confirm_update"
+                            )
                             return [
                                 TextContent(
                                     type="text",
-                                    text=f"⚠️ CONFIRMATION REQUIRED ⚠️\n\n"
-                                    f"You are about to UPDATE this draft:\n"
-                                    f'- Post: "{current_title}"\n'
-                                    f"- Changes:\n{changes_text}\n\n"
-                                    f"⚡ This will ONLY update the fields listed above.\n"
-                                    f"⚡ Other fields (like content) will remain unchanged.\n\n"
-                                    f"Are you sure you want to update this draft?\n\n"
-                                    f'To confirm, simply say "yes" or tell me to proceed.\n'
-                                    f'To cancel, say "no" or tell me to stop.',
+                                    text=self._confirmation_message(
+                                        "⚠️ CONFIRMATION REQUIRED ⚠️",
+                                        [
+                                            "You are about to UPDATE this draft:",
+                                            f'- Post: "{current_title}"',
+                                            f"- Changes:\n{changes_text}",
+                                            "⚡ This will ONLY update the fields listed above.",
+                                            "⚡ Other fields (like content) will remain unchanged.",
+                                        ],
+                                        "confirm_update",
+                                        token,
+                                    ),
                                 )
                             ]
                         except Exception as e:
@@ -970,6 +1226,7 @@ class SubstackMCPServer:
                         subtitle=arguments.get("subtitle"),
                         content_type="markdown",
                     )
+                    self._consume_confirmation_token(arguments["confirmation_token"])
                     return [
                         TextContent(
                             type="text",
@@ -979,6 +1236,12 @@ class SubstackMCPServer:
 
                 elif name == "publish_post":
                     confirm = arguments.get("confirm_publish", False)
+                    if confirm:
+                        error = self._validate_confirmation_token(
+                            name, arguments, "confirm_publish"
+                        )
+                        if error:
+                            return [TextContent(type="text", text=error)]
 
                     if not confirm:
                         # Get the draft details to show what will be published
@@ -1004,18 +1267,24 @@ class SubstackMCPServer:
                             except:
                                 pub_info = "- Subscribers: [count unavailable]"
 
+                            token = self._issue_confirmation_token(
+                                name, arguments, "confirm_publish"
+                            )
                             return [
                                 TextContent(
                                     type="text",
-                                    text=f"⚠️ CONFIRMATION REQUIRED ⚠️\n\n"
-                                    f"You are about to PUBLISH this draft:\n"
-                                    f'- Post: "{title}"\n'
-                                    f"{pub_info}\n"
-                                    f"- Action: Publish immediately and send to all subscribers\n\n"
-                                    f"⚡ This CANNOT be undone and will send emails to all subscribers.\n\n"
-                                    f"Are you sure you want to publish this post?\n\n"
-                                    f'To confirm, simply say "yes" or tell me to proceed.\n'
-                                    f'To cancel, say "no" or tell me to stop.',
+                                    text=self._confirmation_message(
+                                        "⚠️ CONFIRMATION REQUIRED ⚠️",
+                                        [
+                                            "You are about to PUBLISH this draft:",
+                                            f'- Post: "{title}"',
+                                            pub_info,
+                                            "- Action: Publish immediately and send to all subscribers",
+                                            "⚡ This CANNOT be undone and will send emails to all subscribers.",
+                                        ],
+                                        "confirm_publish",
+                                        token,
+                                    ),
                                 )
                             ]
                         except Exception as e:
@@ -1032,6 +1301,7 @@ class SubstackMCPServer:
                     result = await post_handler.publish_draft(
                         post_id=arguments["post_id"]
                     )
+                    self._consume_confirmation_token(arguments["confirmation_token"])
                     return [
                         TextContent(
                             type="text",
@@ -1041,6 +1311,12 @@ class SubstackMCPServer:
 
                 elif name == "schedule_post":
                     confirm = arguments.get("confirm_schedule", False)
+                    if confirm:
+                        error = self._validate_confirmation_token(
+                            name, arguments, "confirm_schedule"
+                        )
+                        if error:
+                            return [TextContent(type="text", text=error)]
 
                     if not confirm:
                         try:
@@ -1058,23 +1334,27 @@ class SubstackMCPServer:
                             )
                             scheduled_at = arguments["scheduled_at"]
                             post_audience = arguments.get("post_audience", "everyone")
-                            email_audience = arguments.get(
-                                "email_audience", "everyone"
-                            )
+                            email_audience = arguments.get("email_audience", "everyone")
 
+                            token = self._issue_confirmation_token(
+                                name, arguments, "confirm_schedule"
+                            )
                             return [
                                 TextContent(
                                     type="text",
-                                    text=f"⚠️ CONFIRMATION REQUIRED ⚠️\n\n"
-                                    f"You are about to SCHEDULE this draft:\n"
-                                    f'- Post: "{title}"\n'
-                                    f"- Publish time: {scheduled_at}\n"
-                                    f"- Access audience: {post_audience}\n"
-                                    f"- Email audience: {email_audience}\n\n"
-                                    f"⚡ This will queue the post for future publication.\n\n"
-                                    f"Are you sure you want to schedule this post?\n\n"
-                                    f'To confirm, simply say "yes" or tell me to proceed.\n'
-                                    f'To cancel, say "no" or tell me to stop.',
+                                    text=self._confirmation_message(
+                                        "⚠️ CONFIRMATION REQUIRED ⚠️",
+                                        [
+                                            "You are about to SCHEDULE this draft:",
+                                            f'- Post: "{title}"',
+                                            f"- Publish time: {scheduled_at}",
+                                            f"- Access audience: {post_audience}",
+                                            f"- Email audience: {email_audience}",
+                                            "⚡ This will queue the post for future publication.",
+                                        ],
+                                        "confirm_schedule",
+                                        token,
+                                    ),
                                 )
                             ]
                         except Exception as e:
@@ -1093,6 +1373,7 @@ class SubstackMCPServer:
                         post_audience=arguments.get("post_audience", "everyone"),
                         email_audience=arguments.get("email_audience", "everyone"),
                     )
+                    self._consume_confirmation_token(arguments["confirmation_token"])
                     schedules = result.get("postSchedules") or []
                     next_schedule = schedules[0] if schedules else {}
                     scheduled_time = (
@@ -1155,7 +1436,10 @@ class SubstackMCPServer:
 
                 elif name == "upload_image":
                     image_handler = ImageHandler(client)
-                    result = await image_handler.upload_image(arguments["image_path"])
+                    source = arguments.get("source") or arguments.get("image_path")
+                    if not source:
+                        raise ValueError("source is required")
+                    result = await image_handler.upload_image(source)
                     return [
                         TextContent(
                             type="text",
@@ -1166,6 +1450,12 @@ class SubstackMCPServer:
                 elif name == "delete_draft":
                     post_id = arguments["post_id"]
                     confirm = arguments.get("confirm_delete", False)
+                    if confirm:
+                        error = self._validate_confirmation_token(
+                            name, arguments, "confirm_delete"
+                        )
+                        if error:
+                            return [TextContent(type="text", text=error)]
 
                     if not confirm:
                         # First call - get draft details and show warning
@@ -1182,16 +1472,23 @@ class SubstackMCPServer:
                         except:
                             title = "Unknown Title"
 
+                        token = self._issue_confirmation_token(
+                            name, arguments, "confirm_delete"
+                        )
                         return [
                             TextContent(
                                 type="text",
-                                text=f"⚠️ DELETION CONFIRMATION REQUIRED ⚠️\n\n"
-                                f"You are about to permanently delete:\n"
-                                f'📄 Title: "{title}"\n'
-                                f"🆔 ID: {post_id}\n\n"
-                                f"This action CANNOT be undone.\n\n"
-                                f"Please confirm: Do you really want to delete this draft?\n"
-                                f"Reply with 'yes' to proceed with deletion.",
+                                text=self._confirmation_message(
+                                    "⚠️ DELETION CONFIRMATION REQUIRED ⚠️",
+                                    [
+                                        "You are about to permanently delete:",
+                                        f'📄 Title: "{title}"',
+                                        f"🆔 ID: {post_id}",
+                                        "This action CANNOT be undone.",
+                                    ],
+                                    "confirm_delete",
+                                    token,
+                                ),
                             )
                         ]
 
@@ -1208,8 +1505,10 @@ class SubstackMCPServer:
                             draft.get("draft_title") or draft.get("title") or "Untitled"
                         )
 
-                        # Delete the draft
                         client.delete_draft(post_id)
+                        self._consume_confirmation_token(
+                            arguments["confirmation_token"]
+                        )
 
                         return [
                             TextContent(
@@ -1290,9 +1589,7 @@ class SubstackMCPServer:
                         ]
                     )
                     if analytics.get("estimated_value") is not None:
-                        lines.append(
-                            f"Estimated value: {analytics['estimated_value']}"
-                        )
+                        lines.append(f"Estimated value: {analytics['estimated_value']}")
 
                     return [TextContent(type="text", text="\n".join(lines))]
 
@@ -1325,6 +1622,12 @@ class SubstackMCPServer:
                         f"Creating PostHandler for duplicate_post with client type: {type(client)}"
                     )
                     confirm = arguments.get("confirm_duplicate", False)
+                    if confirm:
+                        error = self._validate_confirmation_token(
+                            name, arguments, "confirm_duplicate"
+                        )
+                        if error:
+                            return [TextContent(type="text", text=error)]
 
                     if not confirm:
                         # Get the post details to show what will be duplicated
@@ -1339,17 +1642,23 @@ class SubstackMCPServer:
                                 "new_title", f"Copy of {original_title}"
                             )
 
+                            token = self._issue_confirmation_token(
+                                name, arguments, "confirm_duplicate"
+                            )
                             return [
                                 TextContent(
                                     type="text",
-                                    text=f"⚠️ CONFIRMATION REQUIRED ⚠️\n\n"
-                                    f"You are about to DUPLICATE this post:\n"
-                                    f'- Original: "{original_title}"\n'
-                                    f'- New draft title: "{new_title}"\n\n'
-                                    f"⚡ This will create a new draft with the same content.\n\n"
-                                    f"Are you sure you want to duplicate this post?\n\n"
-                                    f'To confirm, simply say "yes" or tell me to proceed.\n'
-                                    f'To cancel, say "no" or tell me to stop.',
+                                    text=self._confirmation_message(
+                                        "⚠️ CONFIRMATION REQUIRED ⚠️",
+                                        [
+                                            "You are about to DUPLICATE this post:",
+                                            f'- Original: "{original_title}"',
+                                            f'- New draft title: "{new_title}"',
+                                            "⚡ This will create a new draft with the same content.",
+                                        ],
+                                        "confirm_duplicate",
+                                        token,
+                                    ),
                                 )
                             ]
                         except Exception as e:
@@ -1367,6 +1676,7 @@ class SubstackMCPServer:
                         post_id=arguments["post_id"],
                         new_title=arguments.get("new_title"),
                     )
+                    self._consume_confirmation_token(arguments["confirmation_token"])
 
                     return [
                         TextContent(
@@ -1569,13 +1879,13 @@ class SubstackMCPServer:
                     return [TextContent(type="text", text="\n".join(lines).strip())]
 
                 elif name == "generate_post_ideas":
-                    my_posts_analysis = {"themes": []}
+                    my_posts_analysis: Dict[str, Any] = {"themes": []}
                     if arguments.get("include_my_posts", True):
                         my_posts = await collect_account_posts(
                             client, source="published", limit=10
                         )
-                        my_posts_analysis = self.strategy_handler.analyze_post_collection(
-                            my_posts
+                        my_posts_analysis = (
+                            self.strategy_handler.analyze_post_collection(my_posts)
                         )
                     research = await self.research_handler.research_substack(
                         query=arguments["query"],
@@ -1627,7 +1937,9 @@ class SubstackMCPServer:
                     my_posts = await collect_account_posts(
                         client, source="published", limit=arguments.get("limit", 10)
                     )
-                    my_analysis = self.strategy_handler.analyze_post_collection(my_posts)
+                    my_analysis = self.strategy_handler.analyze_post_collection(
+                        my_posts
+                    )
                     research = await self.research_handler.research_substack(
                         query=arguments["query"],
                         max_results=20,
@@ -1677,15 +1989,11 @@ class SubstackMCPServer:
                 logger.error(f"Error executing tool {name}: {e}")
                 return [TextContent(type="text", text=f"Error: {str(e)}")]
 
-        self._listed_tool_names = self._load_registered_tool_names(handle_list_tools)
         self._dispatch_tool_names = self._build_dispatch_tool_names()
-        if set(self._listed_tool_names) != set(self._dispatch_tool_names):
-            raise ValueError(
-                "Tool registration drift detected between list_tools() and call_tool()"
-            )
+        self._listed_tool_names = self._dispatch_tool_names
         logger.info("Registered %s tools", len(self._listed_tool_names))
 
-    async def run(self):
+    async def run(self) -> None:
         """Run the MCP server using stdio transport"""
         logger.info("Starting MCP server...")
         async with stdio_server() as (read_stream, write_stream):
@@ -1696,13 +2004,16 @@ class SubstackMCPServer:
                 InitializationOptions(
                     server_name="substack-mcp-plus",
                     server_version=SERVER_VERSION,
-                    capabilities={},
+                    capabilities=self.server.get_capabilities(
+                        NotificationOptions(),
+                        experimental_capabilities={},
+                    ),
                 ),
             )
             logger.info("Server run completed")
 
 
-def main():
+def main() -> None:
     """Main entry point"""
     try:
         server = SubstackMCPServer()
