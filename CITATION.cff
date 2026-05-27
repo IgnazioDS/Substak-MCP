@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: "If you use Substak-MCP in your research or product, please cite it as below."
+title: "Substak-MCP: A Model Context Protocol server for Substack"
+abstract: "Substak-MCP is an open-source Model Context Protocol (MCP) server for Substack. It lets AI clients such as Claude Desktop, Claude Code, Cursor, Codex, Windsurf, and Antigravity draft, publish, schedule, analyze, and research Substack publications via natural language."
+authors:
+  - family-names: "De Santis"
+    given-names: "Ignazio"
+    alias: "IgnazioDS"
+repository-code: "https://github.com/IgnazioDS/Substak-MCP"
+url: "https://github.com/IgnazioDS/Substak-MCP"
+license: MIT
+keywords:
+  - mcp
+  - mcp-server
+  - model-context-protocol
+  - substack
+  - substack-api
+  - claude
+  - cursor
+  - codex
+  - windsurf
+  - ai-tools
+  - ai-agents
+  - llm
+  - newsletter
+  - publishing
+  - content-creation
+  - automation
+version: "1.0.0"
+date-released: "2026-05-27"
