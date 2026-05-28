@@ -1,7 +1,6 @@
 <p align="center">
   <a href="https://github.com/IgnazioDS/Substak-MCP/stargazers"><img src="https://img.shields.io/github/stars/IgnazioDS/Substak-MCP?style=for-the-badge&logo=github&color=ffb400" alt="GitHub stars"></a>
   <a href="https://github.com/IgnazioDS/Substak-MCP/network/members"><img src="https://img.shields.io/github/forks/IgnazioDS/Substak-MCP?style=for-the-badge&logo=github" alt="GitHub forks"></a>
-  <a href="https://github.com/IgnazioDS/Substak-MCP/issues"><img src="https://img.shields.io/github/issues/IgnazioDS/Substak-MCP?style=for-the-badge" alt="GitHub issues"></a>
   <a href="https://github.com/IgnazioDS/Substak-MCP/blob/main/LICENSE"><img src="https://img.shields.io/github/license/IgnazioDS/Substak-MCP?style=for-the-badge&color=blue" alt="MIT License"></a>
   <a href="https://github.com/sponsors/IgnazioDS"><img src="https://img.shields.io/badge/Sponsor-%E2%9D%A4-ff69b4?style=for-the-badge&logo=githubsponsors" alt="Sponsor"></a>
 </p>
@@ -369,7 +368,7 @@ node src/index.js
 
 See [SECURITY.md](SECURITY.md) for project security notes.
 
-## 💖 Sponsor This Project
+## Consider Sponsor This Project
 
 Substak‑MCP is built and maintained in the open by [@IgnazioDS](https://github.com/IgnazioDS). If your team relies on it, or you'd like to support continued development of new tools, integrations, and improvements, please consider sponsoring:
 
