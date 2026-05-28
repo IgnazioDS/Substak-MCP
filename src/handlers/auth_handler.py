@@ -83,7 +83,7 @@ class AuthHandler:
 
         if not has_stored_auth and not has_env_auth:
             raise ValueError(
-                "No authentication found. Please run 'substack-mcp-plus-setup' to configure authentication, "
+                "No authentication found. Please run 'substack-mcp-setup' to configure authentication, "
                 "or provide SUBSTACK_EMAIL/SUBSTACK_PASSWORD or SUBSTACK_SESSION_TOKEN environment variables."
             )
 
@@ -252,14 +252,14 @@ class AuthHandler:
                 logger.error(f"Email/password authentication failed: {e}")
                 if "captcha" in str(e).lower():
                     raise Exception(
-                        "CAPTCHA detected. Please run 'substack-mcp-plus-setup' to authenticate "
+                        "CAPTCHA detected. Please run 'substack-mcp-setup' to authenticate "
                         "through the browser and set up automatic token management."
                     )
                 raise
 
         raise Exception(
             "No valid authentication method available. "
-            "Please run 'substack-mcp-plus-setup' to configure authentication."
+            "Please run 'substack-mcp-setup' to configure authentication."
         )
 
     def _create_session_client(self, session_token: str) -> _CookieClientResource:
@@ -313,7 +313,7 @@ class AuthHandler:
             # This would require re-authenticating through the browser
             # For now, we just log that refresh is needed
             logger.info(
-                "Token refresh needed - user should run substack-mcp-plus-setup again"
+                "Token refresh needed - user should run substack-mcp-setup again"
             )
 
             # In a future enhancement, we could:
@@ -331,7 +331,7 @@ class AuthHandler:
             Headers dict with authentication cookies
         """
         headers = {
-            "User-Agent": "substack-mcp-plus/2.0.0",
+            "User-Agent": "substack-mcp/2.0.0",
             "Content-Type": "application/json",
         }
 

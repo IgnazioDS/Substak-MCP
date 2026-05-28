@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-# ABOUTME: Interactive browser authentication setup for Substack MCP Plus.
+# ABOUTME: Interactive browser authentication setup for Substack MCP.
 # ABOUTME: Captures Substack session cookies after user-driven CAPTCHA/login.
 """
-Interactive authentication setup for Substack MCP Plus
+Interactive authentication setup for Substack MCP
 Handles browser automation and CAPTCHA challenges
 """
 
@@ -39,7 +39,7 @@ class SubstackAuthSetup:
 
     async def run(self):
         """Run the interactive setup process"""
-        print("\n🚀 Substack MCP Plus - Authentication Setup")
+        print("\n🚀 Substack MCP - Authentication Setup")
         print("=" * 50)
         print("\nThis wizard will help you set up secure authentication.")
         print("Your credentials will be encrypted and stored securely.\n")
@@ -78,7 +78,7 @@ class SubstackAuthSetup:
 
             # Test the authentication
             if await self._test_authentication(session_cookies):
-                print("\n🎉 Setup complete! You can now use Substack MCP Plus.")
+                print("\n🎉 Setup complete! You can now use Substack MCP.")
                 self._show_config_example()
                 return True
             else:
@@ -397,9 +397,8 @@ Add this to your Claude Desktop config:
 
 {
   "mcpServers": {
-    "substack-mcp-plus": {
-      "command": "python",
-      "args": ["-m", "src.server"],
+    "substack-mcp": {
+      "command": "substack-mcp",
       "env": {
         "SUBSTACK_PUBLICATION_URL": "%s"
       }

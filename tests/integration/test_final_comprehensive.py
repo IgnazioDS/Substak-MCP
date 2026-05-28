@@ -170,7 +170,7 @@ The MCP server is fully functional and ready to help you create beautiful Substa
 
 ---
 
-*Created with Substack MCP Plus - Making newsletter writing effortless!*"""
+*Created with Substack MCP - Making newsletter writing effortless!*"""
 
         print("📝 Creating final comprehensive test post...")
 

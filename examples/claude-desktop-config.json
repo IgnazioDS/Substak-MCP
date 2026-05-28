@@ -1,7 +1,7 @@
 {
   "mcpServers": {
-    "substack-mcp-plus": {
-      "command": "substack-mcp-plus",
+    "substack-mcp": {
+      "command": "substack-mcp",
       "env": {
         "SUBSTACK_PUBLICATION_URL": "https://YOUR-PUBLICATION.substack.com"
       }

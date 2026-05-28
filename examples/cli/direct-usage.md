@@ -6,10 +6,10 @@ This example shows how to interact with the MCP server directly from the command
 
 ```bash
 # Start the server
-substack-mcp-plus
+substack-mcp
 
 # In another terminal, send a test request
-echo '{"jsonrpc": "2.0", "method": "tools/list", "params": {}, "id": 1}' | substack-mcp-plus
+echo '{"jsonrpc": "2.0", "method": "tools/list", "params": {}, "id": 1}' | substack-mcp
 ```
 
 ## Claude Desktop Configuration
@@ -28,8 +28,8 @@ Add to your Claude Desktop config file:
 ```json
 {
   "mcpServers": {
-    "substack-mcp-plus": {
-      "command": "substack-mcp-plus",
+    "substack-mcp": {
+      "command": "substack-mcp",
       "env": {
         "SUBSTACK_PUBLICATION_URL": "https://YOUR-PUBLICATION.substack.com"
       }
@@ -46,7 +46,7 @@ import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
 
 const transport = new StdioClientTransport({
-  command: 'substack-mcp-plus'
+  command: 'substack-mcp'
 });
 
 const client = new Client({
@@ -78,14 +78,14 @@ const result = await client.callTool({
 ```bash
 # Enable debug logging
 export DEBUG=mcp:*
-substack-mcp-plus
+substack-mcp
 
 # Check server info
-echo '{"jsonrpc": "2.0", "method": "initialize", "params": {"capabilities": {}}, "id": 1}' | substack-mcp-plus
+echo '{"jsonrpc": "2.0", "method": "initialize", "params": {"capabilities": {}}, "id": 1}' | substack-mcp
 ```
 
 ## Common Issues
 
 1. **"Python not found"**: Make sure Python 3.10+ is installed
 2. **"Module not found"**: Run `pip install -e .` in the project directory
-3. **"Authentication failed"**: Run `substack-mcp-plus-setup` to re-authenticate
+3. **"Authentication failed"**: Run `substack-mcp-setup` to re-authenticate

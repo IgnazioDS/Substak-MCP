@@ -22,7 +22,7 @@ function getPythonVersion(cmd) {
 }
 
 function supportsVirtualEnv(cmd) {
-  const probeRoot = mkdtempSync(join(tmpdir(), 'substack-mcp-plus-venv-probe-'));
+  const probeRoot = mkdtempSync(join(tmpdir(), 'substack-mcp-venv-probe-'));
   const probeVenv = join(probeRoot, 'venv');
 
   try {
@@ -90,7 +90,7 @@ export function findPython() {
 }
 
 export function runPostInstall() {
-  console.log('🔧 Setting up Substack MCP Plus...');
+  console.log('🔧 Setting up Substack MCP...');
 
   try {
     const pythonCmd = findPython();
@@ -113,12 +113,12 @@ export function runPostInstall() {
     console.log('✅ Setup complete!');
     console.log('');
     console.log('🎯 Next steps:');
-    console.log('   1. Run: python setup_auth.py');
+    console.log('   1. Run: substack-mcp-setup');
     console.log('   2. Add to Claude Desktop config:');
     console.log('      {');
     console.log('        "mcpServers": {');
-    console.log('          "substack-mcp-plus": {');
-    console.log('            "command": "substack-mcp-plus"');
+    console.log('          "substack-mcp": {');
+    console.log('            "command": "substack-mcp"');
     console.log('          }');
     console.log('        }');
     console.log('      }');

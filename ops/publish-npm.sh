@@ -27,4 +27,4 @@ echo "Publishing to npm..."
 npm publish --access public
 
 echo "✅ Package published successfully to npm!"
-echo "📦 View at: https://www.npmjs.com/package/substack-mcp-plus"
+echo "📦 View at: https://www.npmjs.com/package/substack-mcp"

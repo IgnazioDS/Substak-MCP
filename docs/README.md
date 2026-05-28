@@ -1,6 +1,6 @@
-# Substack MCP Plus Documentation
+# Substack MCP Documentation
 
-Welcome to the Substack MCP Plus documentation! This directory contains all the guides and references you need to use and understand the project.
+Welcome to the Substack MCP documentation! This directory contains all the guides and references you need to use and understand the project.
 
 ## 📚 User Documentation
 
@@ -35,7 +35,8 @@ For contributors and developers working on the project:
 ## 🔗 Quick Links
 
 - [Main README](../README.md)
-- [Roadmap & Next Steps](ROADMAP.md)
+- [Current TODOs](TODO.md)
+- [Vision & Roadmap](VISION.md)
 - [Contributing Guide](../CONTRIBUTING.md)
 - [Security Policy](../SECURITY.md)
 - [Claude Code Configuration](../CLAUDE.md)
@@ -49,7 +50,6 @@ docs/
 ├── README.md                    # Documentation index (this file)
 ├── QUICKSTART.md               # Get started in 5 minutes
 ├── TODO.md                     # Current work items with subtasks
-├── ROADMAP.md                  # Long-term vision and features
 ├── authentication.md            # Authentication setup guide
 ├── formatting.md                # Content formatting guide
 ├── TESTING.md                   # Comprehensive testing documentation

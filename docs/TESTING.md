@@ -23,7 +23,7 @@ tests/
 ```bash
 # Clone the repository
 git clone [repository-url]
-cd substack-mcp-plus
+cd Substak-MCP
 
 # Run the automated setup
 ./setup.sh
@@ -334,7 +334,7 @@ When adding features:
        "substack": {
          "command": "python",
          "args": ["-m", "src.server"],
-         "cwd": "/path/to/substack-mcp-plus",
+         "cwd": "/path/to/Substak-MCP",
          "env": {
            "SUBSTACK_PUBLICATION_URL": "https://yourpublication.substack.com",
            "SUBSTACK_EMAIL": "your-email@example.com",
@@ -351,7 +351,7 @@ When adding features:
 
 ```bash
 # Kill any existing MCP processes
-pkill -f substack-mcp-plus
+pkill -f substack-mcp
 
 # Clear any test drafts from your Substack account (optional)
 # Log into Substack web UI and delete test drafts

@@ -176,7 +176,7 @@ class ResearchHandler:
     """Discovers and summarizes Substack research results."""
 
     USER_AGENT = (
-        f"substack-mcp-plus-research/{SERVER_VERSION} "
+        f"substack-mcp-research/{SERVER_VERSION} "
         "(+https://github.com/IgnazioDS/Substak-MCP)"
     )
 

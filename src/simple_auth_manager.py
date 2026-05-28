@@ -1,5 +1,5 @@
-# ABOUTME: SimpleAuthManager class for file-based token storage without keychain
-# ABOUTME: Uses encrypted local file storage to avoid macOS keychain password prompts
+# ABOUTME: SimpleAuthManager handles encrypted local auth storage without keychain use.
+# ABOUTME: It prefers the current auth directory and reuses the legacy one when present.
 
 import base64
 import json
@@ -25,8 +25,16 @@ class SimpleAuthManager:
         """
         self.publication_url = publication_url
 
-        # Use a consistent location in user's home directory
-        self.config_dir = Path.home() / ".substack-mcp-plus"
+        # Prefer the current config directory but reuse the legacy one so
+        # existing installs keep working after the rename.
+        home_dir = Path.home()
+        legacy_config_dir = home_dir / ".substack-mcp-plus"
+        current_config_dir = home_dir / ".substack-mcp"
+        self.config_dir = (
+            legacy_config_dir
+            if legacy_config_dir.exists() and not current_config_dir.exists()
+            else current_config_dir
+        )
         self.config_dir.mkdir(exist_ok=True)
         os.chmod(self.config_dir, 0o700)
 

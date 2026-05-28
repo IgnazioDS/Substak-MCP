@@ -346,7 +346,7 @@ class TestAuthHandler:
             headers = handler.get_headers()
 
             assert headers["Cookie"] == "substack.sid=test-session-token"
-            assert headers["User-Agent"].startswith("substack-mcp-plus/")
+            assert headers["User-Agent"].startswith("substack-mcp/")
             assert "Content-Type" in headers
 
     def test_create_session_client(self):

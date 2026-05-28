@@ -1,6 +1,6 @@
-# Substack MCP Plus - Quick Start Guide
+# Substack MCP - Quick Start Guide
 
-This is the fastest setup path I recommend for Substack MCP Plus.
+This is the fastest setup path I recommend for Substack MCP.
 
 ## 🚀 Quick Setup
 
@@ -9,7 +9,7 @@ This is the fastest setup path I recommend for Substack MCP Plus.
 npm install -g github:IgnazioDS/Substak-MCP
 
 # Run the authentication setup wizard  
-substack-mcp-plus-setup
+substack-mcp-setup
 ```
 
 The setup wizard handles the heavy lifting:
@@ -20,17 +20,17 @@ The setup wizard handles the heavy lifting:
 - ✅ Automatic configuration
 
 If Substack sends an email sign-in link, open or paste that link in the same
-browser window opened by `substack-mcp-plus-setup`. The setup captures the final
+browser window opened by `substack-mcp-setup`. The setup captures the final
 browser cookies after that window reaches a signed-in Substack page.
 
 ## 🔄 Existing Users
 
-If you installed another package variant, reinstall from this repository and rerun setup:
+If you installed the older plus-era package, reinstall from this repository and rerun setup:
 
 ```bash
-npm uninstall -g substack-mcp-plus
+npm uninstall -g @ignaziods/substack-mcp-plus
 npm install -g github:IgnazioDS/Substak-MCP
-substack-mcp-plus-setup
+substack-mcp-setup
 ```
 
 Then fully restart your MCP client.
@@ -42,8 +42,8 @@ After running setup, add this minimal config to Claude Desktop:
 ```json
 {
   "mcpServers": {
-    "substack-mcp-plus": {
-      "command": "substack-mcp-plus",
+    "substack-mcp": {
+      "command": "substack-mcp",
       "env": {
         "SUBSTACK_PUBLICATION_URL": "https://YOUR-PUBLICATION.substack.com"
       }
@@ -63,8 +63,8 @@ If you already have other MCP servers configured, add this alongside them:
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-filesystem", "/path/to/allowed/directory"]
     },
-    "substack-mcp-plus": {
-      "command": "substack-mcp-plus",
+    "substack-mcp": {
+      "command": "substack-mcp",
       "env": {
         "SUBSTACK_PUBLICATION_URL": "https://YOUR-PUBLICATION.substack.com"
       }
@@ -116,10 +116,10 @@ Upload image from https://picsum.photos/800/400 optimized for web
 
 | Issue | Solution |
 |-------|----------|
-| "No authentication found" | Run `substack-mcp-plus-setup` |
+| "No authentication found" | Run `substack-mcp-setup` |
 | CAPTCHA appears | Solve it in the browser window |
 | Email link opens elsewhere | Copy the link and paste it into the setup browser |
-| Session expired | Run `substack-mcp-plus-setup` again |
+| Session expired | Run `substack-mcp-setup` again |
 | Import errors | Reinstall with `npm install -g github:IgnazioDS/Substak-MCP` |
 
 ## 🎯 Pro Tips
@@ -155,4 +155,4 @@ export SUBSTACK_PUBLICATION_URL="https://YOUR_PUBLICATION.substack.com"
 
 ---
 
-**Need help?** I kept the setup flow opinionated on purpose. In most cases, rerunning `substack-mcp-plus-setup` is the right fix.
+**Need help?** I kept the setup flow opinionated on purpose. In most cases, rerunning `substack-mcp-setup` is the right fix.
