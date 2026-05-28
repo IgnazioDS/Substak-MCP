@@ -2,7 +2,11 @@
 # ABOUTME: Prevents drift between npm, Python packaging, and MCP runtime versioning.
 
 import json
-import tomllib
+import sys
+if sys.version_info >= (3, 11):
+    import tomllib
+else:
+    import tomli as tomllib
 from pathlib import Path
 
 import src.version as runtime_version
