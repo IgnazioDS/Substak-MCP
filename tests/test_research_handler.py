@@ -10,7 +10,7 @@ from src.version import SERVER_VERSION
 def test_user_agent_is_transparent():
     handler = ResearchHandler()
 
-    assert f"substack-mcp-plus-research/{SERVER_VERSION}" in handler.USER_AGENT
+    assert f"substack-mcp-research/{SERVER_VERSION}" in handler.USER_AGENT
     assert "github.com/IgnazioDS/Substak-MCP" in handler.USER_AGENT
 
 

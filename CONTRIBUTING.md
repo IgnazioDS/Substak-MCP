@@ -1,6 +1,6 @@
-# Contributing to Substack MCP Plus
+# Contributing to Substack MCP
 
-First off, thank you for considering contributing to Substack MCP Plus! It's people like you that make Substack MCP Plus such a great tool.
+First off, thank you for considering contributing to Substack MCP! It's people like you that make Substack MCP such a great tool.
 
 ## Code of Conduct
 
@@ -35,7 +35,7 @@ Enhancement suggestions are tracked as GitHub issues. When creating an enhanceme
 ### What to Work On
 
 Check our [TODO.md](docs/TODO.md) for current work items with detailed subtasks you can claim.
-Also see [ROADMAP.md](docs/ROADMAP.md) for longer-term features and improvements.
+Also see [VISION.md](docs/VISION.md) for longer-term direction.
 
 We especially welcome:
 * Bug fixes (always high priority)
@@ -61,8 +61,8 @@ We especially welcome:
 1. Fork the repo and create your branch from `main`
 2. Clone your fork:
    ```bash
-   git clone https://github.com/your-username/substack-mcp-plus.git
-   cd substack-mcp-plus
+   git clone https://github.com/your-username/Substak-MCP.git
+   cd Substak-MCP
    ```
 
 3. Install dependencies:
@@ -169,7 +169,7 @@ Fixes #123
 ## Project Structure
 
 ```
-substack-mcp-plus/
+Substak-MCP/
 ├── src/                 # Source code
 │   ├── converters/      # Format converters
 │   ├── handlers/        # API handlers

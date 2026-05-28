@@ -31,12 +31,12 @@ class TestSimpleAuthManager:
             manager = SimpleAuthManager("https://test.substack.com")
 
             assert manager.config_dir.exists()
-            assert manager.config_dir.name == ".substack-mcp-plus"
+            assert manager.config_dir.name == ".substack-mcp"
             assert manager.config_dir.stat().st_mode & 0o777 == 0o700
 
     def test_init_tightens_existing_directory_permissions(self, temp_dir):
         """Test that initialization tightens an existing config directory"""
-        config_dir = Path(temp_dir) / ".substack-mcp-plus"
+        config_dir = Path(temp_dir) / ".substack-mcp"
         config_dir.mkdir()
         os.chmod(config_dir, 0o755)
 
@@ -44,6 +44,17 @@ class TestSimpleAuthManager:
             manager = SimpleAuthManager("https://test.substack.com")
 
             assert manager.config_dir.stat().st_mode & 0o777 == 0o700
+
+    def test_init_reuses_legacy_directory_when_present(self, temp_dir):
+        """Test that existing plus-era auth storage is reused for compatibility."""
+        legacy_dir = Path(temp_dir) / ".substack-mcp-plus"
+        legacy_dir.mkdir()
+        os.chmod(legacy_dir, 0o700)
+
+        with patch("src.simple_auth_manager.Path.home", return_value=Path(temp_dir)):
+            manager = SimpleAuthManager("https://test.substack.com")
+
+            assert manager.config_dir == legacy_dir
 
     def test_store_and_retrieve_token(self, auth_manager):
         """Test storing and retrieving a token"""

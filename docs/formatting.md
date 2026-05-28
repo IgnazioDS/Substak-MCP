@@ -1,6 +1,6 @@
-# Formatting Guide for Substack MCP Plus
+# Formatting Guide for Substack MCP
 
-This guide demonstrates all the formatting options available when creating posts with Substack MCP Plus. The server accepts Markdown, HTML, or plain text and converts it to Substack's rich text format.
+This guide demonstrates all the formatting options available when creating posts with Substack MCP. The server accepts Markdown, HTML, or plain text and converts it to Substack's rich text format.
 
 ## Table of Contents
 
@@ -120,10 +120,10 @@ function greetReaders() {
 
 ```bash
 # Install the package
-pip install substack-mcp-plus
+npm install -g github:IgnazioDS/Substak-MCP
 
 # Run the server
-python -m src.server
+substack-mcp
 ```
 ````
 

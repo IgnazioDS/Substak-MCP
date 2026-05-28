@@ -10,7 +10,7 @@
 
 ## 🔐 Security Best Practices
 
-When using Substack MCP Plus, please follow these security best practices:
+When using Substack MCP, please follow these security best practices:
 
 ### Environment Variables
 - **Never commit your `.env` file** to version control
@@ -20,7 +20,7 @@ When using Substack MCP Plus, please follow these security best practices:
 
 ### Authentication
 - **Browser Setup Method** (Recommended):
-  - Use `substack-mcp-plus-setup`
+  - Use `substack-mcp-setup`
   - Complete CAPTCHA, password, magic-link, or email verification in the setup browser
   - If Substack emails a sign-in link, paste it into the same setup browser
   - The tool stores encrypted session cookies, not your Substack password
@@ -31,7 +31,7 @@ When using Substack MCP Plus, please follow these security best practices:
   - Revoke tokens immediately if compromised
 
 ### Local Auth Storage
-- Browser session data is encrypted at `~/.substack-mcp-plus/auth.json`
+- Browser session data is encrypted at `~/.substack-mcp/auth.json`
 - The auth file is written with owner-only permissions (`600`)
 - The auth directory is written with owner-only permissions (`700`)
 - Never commit `auth.json`, `.key`, `.env`, cookies, tokens, or terminal logs that contain secrets
@@ -43,7 +43,7 @@ When using Substack MCP Plus, please follow these security best practices:
 
 ## 🚨 Reporting Security Vulnerabilities
 
-We take security seriously. If you discover a security vulnerability in Substack MCP Plus, please follow these steps:
+We take security seriously. If you discover a security vulnerability in Substack MCP, please follow these steps:
 
 ### 1. Do NOT Create a Public Issue
 Security vulnerabilities should be reported privately to prevent exploitation.
@@ -103,4 +103,4 @@ Security updates will be released as soon as possible after discovery and fix. U
 
 ---
 
-Thank you for helping keep Substack MCP Plus secure!
+Thank you for helping keep Substack MCP secure!

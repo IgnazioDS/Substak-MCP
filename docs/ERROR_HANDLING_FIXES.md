@@ -1,6 +1,6 @@
 # Error Handling Fixes Summary
 
-This document captures the debugging path I used to fix critical errors in Substack MCP Plus, especially the `"'str' object has no attribute 'get'"` failures that affected multiple tools.
+This document captures the debugging path I used to fix critical errors in Substack MCP, especially the `"'str' object has no attribute 'get'"` failures that affected multiple tools.
 
 ## The Problem
 

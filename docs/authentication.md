@@ -1,6 +1,6 @@
-# Authentication Guide for Substack MCP Plus
+# Authentication Guide for Substack MCP
 
-This guide explains how to set up authentication for Substack MCP Plus. The
+This guide explains how to set up authentication for Substack MCP. The
 recommended setup uses a real browser login so Substack can show CAPTCHA,
 password, magic-link, or email-verification steps normally.
 
@@ -9,7 +9,7 @@ password, magic-link, or email-verification steps normally.
 The setup path I recommend is the interactive setup wizard included in this repo:
 
 ```bash
-substack-mcp-plus-setup
+substack-mcp-setup
 ```
 
 This wizard will:
@@ -48,7 +48,7 @@ For local development from the repository, use:
 I designed the authentication flow with three layers so it stays usable when one path fails:
 
 1. **Secure Browser Session Storage** (Primary)
-   - Session cookies are encrypted and stored at `~/.substack-mcp-plus/auth.json`
+   - Session cookies are encrypted and stored at `~/.substack-mcp/auth.json`
    - The auth file is owner-readable only (`600`)
    - The auth directory is owner-only (`700`)
    - Automatically used when available
@@ -64,13 +64,13 @@ I designed the authentication flow with three layers so it stays usable when one
 
 ## 📝 Configuration
 
-After running `substack-mcp-plus-setup`, you only need to provide the publication URL in your Claude Desktop config:
+After running `substack-mcp-setup`, you only need to provide the publication URL in your Claude Desktop config:
 
 ```json
 {
   "mcpServers": {
-    "substack-mcp-plus": {
-      "command": "substack-mcp-plus",
+    "substack-mcp": {
+      "command": "substack-mcp",
       "env": {
         "SUBSTACK_PUBLICATION_URL": "https://yourpublication.substack.com"
       }
@@ -84,7 +84,7 @@ After running `substack-mcp-plus-setup`, you only need to provide the publicatio
 ## 🔄 Session Management
 
 ### Automatic Features
-- **Secure Storage**: Browser session cookies are encrypted in `~/.substack-mcp-plus/auth.json`
+- **Secure Storage**: Browser session cookies are encrypted in `~/.substack-mcp/auth.json`
 - **Expiration Tracking**: Monitors session age and prompts for refresh
 - **Cache Management**: Reuses authenticated sessions for performance
 - **Clear Error Messages**: Helpful guidance when authentication fails
@@ -92,7 +92,7 @@ After running `substack-mcp-plus-setup`, you only need to provide the publicatio
 ### Manual Session Refresh
 If needed, simply run the setup wizard again:
 ```bash
-substack-mcp-plus-setup
+substack-mcp-setup
 ```
 
 It will detect existing authentication and ask if you want to replace it.
@@ -129,7 +129,7 @@ SUBSTACK_PUBLICATION_URL=https://YOUR_PUBLICATION.substack.com
 ## 🚨 Troubleshooting
 
 ### "No authentication found" Error
-**Solution**: Run `substack-mcp-plus-setup`
+**Solution**: Run `substack-mcp-setup`
 
 ### CAPTCHA Issues
 The setup wizard handles CAPTCHA automatically. If you still have issues:
@@ -137,15 +137,15 @@ The setup wizard handles CAPTCHA automatically. If you still have issues:
 2. Try using magic link authentication instead of password
 3. Log in manually once in your browser
 4. Wait 5 minutes
-5. Run `substack-mcp-plus-setup` again
+5. Run `substack-mcp-setup` again
 
 ### Email Link Opened in Another Browser
 **Solution**: Copy the email link and paste it into the browser window opened by
-`substack-mcp-plus-setup`. The setup must see the final signed-in browser state
+`substack-mcp-setup`. The setup must see the final signed-in browser state
 before it can store the session.
 
 ### Session Expired
-**Solution**: Run `substack-mcp-plus-setup` to refresh
+**Solution**: Run `substack-mcp-setup` to refresh
 
 ### "Authentication failed" Error
 1. Verify your email is correct
@@ -158,7 +158,7 @@ before it can store the session.
 
 1. **Never commit credentials** to version control
 2. **Use the setup wizard** for the most secure configuration
-3. **Session cookies are encrypted** in `~/.substack-mcp-plus/auth.json`
+3. **Session cookies are encrypted** in `~/.substack-mcp/auth.json`
 4. **Enable 2FA** on your Substack account
 5. **Rotate passwords** periodically
 
@@ -167,7 +167,7 @@ before it can store the session.
 ### How Sessions Are Stored
 
 Sessions are stored using:
-- **Encrypted local file**: `~/.substack-mcp-plus/auth.json`
+- **Encrypted local file**: `~/.substack-mcp/auth.json`
 - **Encryption**: Additional layer using Fernet symmetric encryption
 - **Permissions**: auth file `600`, config directory `700`
 - **Metadata**: Expiration tracking and email association
@@ -191,7 +191,7 @@ The system tries authentication in this order:
 
 For 99% of users, just run:
 ```bash
-substack-mcp-plus-setup
+substack-mcp-setup
 ```
 
 Follow the prompts, and you're done! The system handles everything else automatically.

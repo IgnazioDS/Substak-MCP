@@ -15,7 +15,7 @@ const venvPython = process.platform === 'win32'
 
 const setupScript = join(projectRoot, 'setup_auth.py');
 
-console.log('🔧 Starting Substack MCP Plus authentication setup...\n');
+console.log('🔧 Starting Substack MCP authentication setup...\n');
 
 // Spawn the Python setup script
 const setupProcess = spawn(venvPython, [setupScript], {

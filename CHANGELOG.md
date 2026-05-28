@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Browser setup now stores the full authenticated Substack cookie jar after CAPTCHA, password, magic-link, or email-verification flows.
 - Authenticated requests now reuse the stored cookie jar instead of only `substack.sid`, fixing logins that succeeded in the browser but failed later in the MCP server.
-- Auth tests now isolate local storage from the developer machine's real `~/.substack-mcp-plus` auth files.
+- Auth tests now isolate local storage from the developer machine's real `~/.substack-mcp` auth files.
 - Scheduling regression tests now use future-safe timestamps.
 
 ### Security
@@ -57,7 +57,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.2] - 2025-07-07
 
 ### Added
-- New `substack-mcp-plus-setup` command for easy authentication setup
+- New `substack-mcp-setup` command for easy authentication setup
 - No more hunting for node_modules directories!
 
 ### Changed
@@ -94,7 +94,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - GitHub Actions CI/CD workflow
   - CONTRIBUTING.md with detailed guidelines
   - LICENSE file (MIT)
-  - docs/ROADMAP.md with prioritized next steps
+  - docs/VISION.md with longer-term direction
   - docs/TODO.md with current work items and subtasks for contributors
   - docs/KNOWN_ISSUES.md documenting all current limitations
   - docs/COVERAGE_REPORT.md with detailed test coverage by module
@@ -114,12 +114,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Project state awareness checklist
 
 ### Changed
-- Updated repository URLs to abanoub-ashraf/substack-mcp-plus
+- Updated repository URLs to IgnazioDS/Substak-MCP
 - Updated package descriptions to clarify unofficial status
 - Enhanced .gitignore with comprehensive patterns
 - Fixed author information in package metadata
 - Reorganized documentation structure:
-  - Moved ROADMAP.md to docs/
+  - Moved long-term planning content to docs/
   - Moved QUICKSTART.md to docs/
   - Moved GITHUB_READY.md to docs/internal/
   - Updated all document references

@@ -27,7 +27,7 @@ async def create_comprehensive_test_post():
     # Create comprehensive test content
     content = """# Comprehensive Markdown Test Post
 
-Welcome to this **comprehensive test** of all markdown formatting features available in our Substack MCP Plus server!
+Welcome to this **comprehensive test** of all markdown formatting features available in our Substack MCP server!
 
 ## Text Formatting
 
@@ -79,7 +79,7 @@ Here's a Python code block:
 
 ```python
 def hello_world():
-    print("Hello from Substack MCP Plus!")
+    print("Hello from Substack MCP!")
     
     # This is a comment
     numbers = [1, 2, 3, 4, 5]
@@ -150,7 +150,7 @@ This content appears after the paywall marker and should only be visible to paid
 
 ## Conclusion
 
-This comprehensive test post demonstrates all the markdown formatting capabilities of our Substack MCP Plus server:
+This comprehensive test post demonstrates all the markdown formatting capabilities of our Substack MCP server:
 
 1. ✅ Headers (H1-H6)
 2. ✅ Text formatting (bold, italic, code)
@@ -162,7 +162,7 @@ This comprehensive test post demonstrates all the markdown formatting capabiliti
 8. ✅ Mixed formatting
 9. ✅ Paywall integration
 
-**Thank you for testing our Substack MCP Plus server!** 🚀"""
+**Thank you for testing our Substack MCP server!** 🚀"""
 
     # Create the post handler
     post_handler = PostHandler(client)
@@ -174,7 +174,7 @@ This comprehensive test post demonstrates all the markdown formatting capabiliti
         result = await post_handler.create_draft(
             title="🧪 Comprehensive Markdown Test - All Formatting Types",
             content=content,
-            subtitle="Testing every markdown feature supported by Substack MCP Plus",
+            subtitle="Testing every markdown feature supported by Substack MCP",
             content_type="markdown",
         )
 

@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-  <b>Substack MCP server for AI clients</b> &mdash; draft, publish, schedule, analyze, and research Substack publications from <b>Claude</b>, <b>Cursor</b>, <b>Codex</b>, <b>Windsurf</b>, <b>Antigravity</b>, and any Model Context Protocol client.
+  <b>Substack MCP server for AI clients</b> &mdash; draft, publish, schedule, analyze, and research Substack publications from clients that support stdio MCP servers, including <b>Claude</b>, <b>Cursor</b>, <b>Codex</b>, <b>Windsurf</b>, and other compatible MCP hosts.
 </p>
 
 <p align="center">
@@ -82,19 +82,25 @@ npm install -g github:IgnazioDS/Substak-MCP
 This installs two commands:
 
 ```bash
-substack-mcp-plus
-substack-mcp-plus-setup
+substack-mcp
+substack-mcp-setup
 ```
+
+Naming note:
+- the repository is `IgnazioDS/Substak-MCP`
+- the current npm package is `@ignaziods/substack-mcp`
+- the installed commands are `substack-mcp` and `substack-mcp-setup`
+- the default MCP server key in examples is `substack-mcp`
 
 ### Migrating From the Old Package
 
-If you previously installed another package variant, remove it before
+If you previously installed the older plus-era package, remove it before
 installing from this repository:
 
 ```bash
-npm uninstall -g substack-mcp-plus
+npm uninstall -g @ignaziods/substack-mcp-plus
 npm install -g github:IgnazioDS/Substak-MCP
-substack-mcp-plus-setup
+substack-mcp-setup
 ```
 
 After reinstalling, fully restart your MCP client so it reloads the command.
@@ -104,7 +110,7 @@ After reinstalling, fully restart your MCP client so it reloads the command.
 Run the setup wizard:
 
 ```bash
-substack-mcp-plus-setup
+substack-mcp-setup
 ```
 
 The setup flow will:
@@ -113,11 +119,13 @@ The setup flow will:
 - handle CAPTCHA/manual login flow
 - store an encrypted browser session locally for later use
 
-The local auth file lives at `~/.substack-mcp-plus/auth.json`. The setup stores
+The local auth file lives at `~/.substack-mcp/auth.json`. The setup stores
 the browser session cookie jar after login, not your Substack password.
+If you already have auth stored under `~/.substack-mcp-plus/`, the runtime
+reuses that legacy directory until you migrate it.
 
 If Substack sends an email sign-in link, open or paste that link in the same
-browser window opened by `substack-mcp-plus-setup`. That same-browser step is
+browser window opened by `substack-mcp-setup`. That same-browser step is
 what lets the setup capture the final authenticated session.
 
 If your client later says authentication failed, run the setup again.
@@ -131,8 +139,8 @@ Server block:
 ```json
 {
   "mcpServers": {
-    "substack-mcp-plus": {
-      "command": "substack-mcp-plus",
+    "substack-mcp": {
+      "command": "substack-mcp",
       "env": {
         "SUBSTACK_PUBLICATION_URL": "https://YOUR_PUBLICATION.substack.com",
         "SUBSTACK_DEVELOPER_API_TOKEN": "optional-developer-api-token"
@@ -142,13 +150,17 @@ Server block:
 }
 ```
 
+`SUBSTACK_DEVELOPER_API_TOKEN` is only needed for the limited Developer API
+profile-lookup surface. Most account tools and public research flows do not
+require it.
+
 If your GUI client does not inherit your shell `PATH`, use an absolute path instead:
 
 ```bash
-which substack-mcp-plus
+which substack-mcp
 ```
 
-Then replace `"substack-mcp-plus"` with the full path to the binary.
+Then replace `"substack-mcp"` with the full path to the binary.
 
 ### Client Notes
 
@@ -158,15 +170,15 @@ Then replace `"substack-mcp-plus"` with the full path to the binary.
   - Windows: `%APPDATA%\\Claude\\claude_desktop_config.json`
   - Linux: `~/.config/Claude/claude_desktop_config.json`
 - Claude Code
-  Add the same `mcpServers.substack-mcp-plus` block to `~/.claude.json`.
+  Add the same `mcpServers.substack-mcp` block to `~/.claude.json`.
 - Codex
   Add this to `~/.codex/config.toml`:
 
   ```toml
-  [mcp_servers.substack-mcp-plus]
-  command = "substack-mcp-plus"
+  [mcp_servers.substack-mcp]
+  command = "substack-mcp"
 
-  [mcp_servers.substack-mcp-plus.env]
+  [mcp_servers.substack-mcp.env]
   SUBSTACK_PUBLICATION_URL = "https://YOUR_PUBLICATION.substack.com"
   SUBSTACK_DEVELOPER_API_TOKEN = "optional-developer-api-token"
   ```
@@ -182,6 +194,8 @@ Then replace `"substack-mcp-plus"` with the full path to the binary.
 After updating the config, fully restart the client.
 
 ## Tool List
+
+The server currently registers 29 tools.
 
 ### Publishing and Account Tools
 
@@ -295,7 +309,7 @@ Your client may not inherit your shell `PATH`.
 Find the installed binary:
 
 ```bash
-which substack-mcp-plus
+which substack-mcp
 ```
 
 Then use the absolute path in the client config.
@@ -305,7 +319,7 @@ Then use the absolute path in the client config.
 Run setup again:
 
 ```bash
-substack-mcp-plus-setup
+substack-mcp-setup
 ```
 
 If Substack sent a sign-in email, paste the email link into the same setup
@@ -336,33 +350,47 @@ Usually weaker:
 
 ### GUI client still cannot launch the server
 
-Use an absolute command path instead of `substack-mcp-plus`.
+Use an absolute command path instead of `substack-mcp`.
 
 ## Development
 
-Install editable Python dependencies in the project venv:
+For local development, activate the project virtual environment first:
 
 ```bash
-./venv/bin/python -m pip install -e '.[dev]'
+source venv/bin/activate
+python3 -m pip install -e '.[dev]'
 ```
 
 Run tests:
 
 ```bash
-./venv/bin/python -m pytest -q
+python3 -m pytest -q
 ```
 
-Run the server directly:
+Run the Python server directly:
+
+```bash
+python3 -m src.server
+```
+
+Run the npm wrapper entrypoint used by the installed CLI:
 
 ```bash
 node src/index.js
+```
+
+If you are developing from the repository and the auth setup cannot launch
+Chromium, install the Playwright browser once:
+
+```bash
+python3 -m playwright install chromium
 ```
 
 ## Security
 
 - Do not commit tokens, passwords, or private keys.
 - Prefer interactive setup over hardcoded credentials.
-- Stored browser session data is encrypted under `~/.substack-mcp-plus/`.
+- Stored browser session data is encrypted under `~/.substack-mcp/`.
 - Use obvious placeholders in configs and examples.
 - Re-run authentication if a stored Substack session expires.
 
@@ -370,7 +398,7 @@ See [SECURITY.md](SECURITY.md) for project security notes.
 
 ## Consider Sponsor This Project
 
-Substak‑MCP is built and maintained in the open by [@IgnazioDS](https://github.com/IgnazioDS). If your team relies on it, or you'd like to support continued development of new tools, integrations, and improvements, please consider sponsoring:
+`Substak-MCP` is built and maintained in the open by [@IgnazioDS](https://github.com/IgnazioDS). If your team relies on it, or you'd like to support continued development of new tools, integrations, and improvements, please consider sponsoring:
 
 - ❤️ **GitHub Sponsors:** https://github.com/sponsors/IgnazioDS
 

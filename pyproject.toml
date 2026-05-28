@@ -3,7 +3,7 @@ requires = ["setuptools>=68.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "substack-mcp-plus"
+name = "substack-mcp"
 version = "1.0.5"
 description = "Unofficial MCP server for Substack with rich text formatting (not affiliated with Substack Inc.)"
 requires-python = ">=3.10"

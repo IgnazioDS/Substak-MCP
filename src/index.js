@@ -108,7 +108,7 @@ pythonProcess.on('exit', (code, signal) => {
     console.error('\n❌ Python server exited with an error');
     console.error('💡 Common solutions:');
     console.error('   1. Install dependencies: pip install -e .');
-    console.error('   2. Run setup: substack-mcp-plus-setup');
+    console.error('   2. Run setup: substack-mcp-setup');
     console.error('   3. Check your Python environment has required packages');
   }
   process.exit(code || 0);

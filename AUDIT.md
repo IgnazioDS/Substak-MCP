@@ -1,4 +1,4 @@
-# Deep Audit of `substack-mcp-plus`
+# Deep Audit of `substack-mcp`
 
 Date: 2026-05-27  
 Branch: `audit/complete-mcp`  

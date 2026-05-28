@@ -1,12 +1,12 @@
 {
-  "name": "@ignaziods/substack-mcp-plus",
+  "name": "@ignaziods/substack-mcp",
   "version": "1.0.5",
   "description": "Unofficial Substack MCP server with 29 tools, browser auth, rich text support, public research, and strategy helpers. Not affiliated with Substack Inc.",
   "type": "module",
   "main": "src/index.js",
   "bin": {
-    "substack-mcp-plus": "src/index.js",
-    "substack-mcp-plus-setup": "src/setup.js"
+    "substack-mcp": "src/index.js",
+    "substack-mcp-setup": "src/setup.js"
   },
   "preferGlobal": true,
   "scripts": {

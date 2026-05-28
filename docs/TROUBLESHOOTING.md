@@ -1,4 +1,4 @@
-# Substack MCP Plus Troubleshooting Guide
+# Substack MCP Troubleshooting Guide
 
 ## Common Issues and Solutions
 
@@ -33,7 +33,7 @@
 **Solutions:**
 1. Verify your authentication has admin/owner privileges
 2. Check if subscriber count is visible in Substack dashboard
-3. Try re-authenticating with `substack-mcp-plus-setup`
+3. Try re-authenticating with `substack-mcp-setup`
 
 ### 3. Authentication Issues
 
@@ -45,17 +45,17 @@
 **Solutions:**
 1. If you installed another package variant, reinstall from this repository:
    ```bash
-   npm uninstall -g substack-mcp-plus
+   npm uninstall -g @ignaziods/substack-mcp-plus
    npm install -g github:IgnazioDS/Substak-MCP
    ```
 2. Re-run authentication setup:
    ```bash
-   substack-mcp-plus-setup
+   substack-mcp-setup
    ```
 3. Fully restart your MCP client.
 4. Clear cached credentials only if setup still fails:
    ```bash
-   rm -i ~/.substack-mcp-plus/auth.json ~/.substack-mcp-plus/.key
+   rm -i ~/.substack-mcp/auth.json ~/.substack-mcp/.key
    ```
 5. Use the same setup browser for CAPTCHA, password, and email-link verification
 
@@ -68,7 +68,7 @@
 
 **Solution:**
 1. Copy the sign-in link from the email.
-2. Paste it into the browser window opened by `substack-mcp-plus-setup`.
+2. Paste it into the browser window opened by `substack-mcp-setup`.
 3. Wait for the setup browser to show a signed-in Substack page.
 4. Return to the terminal and let setup finish storing the session.
 
@@ -144,7 +144,7 @@ If you see "API returned invalid data format", it usually means:
 ## Quick Fixes
 
 ### "It was working yesterday"
-→ Re-authenticate: `substack-mcp-plus-setup`
+→ Re-authenticate: `substack-mcp-setup`
 
 ### "Can't find my post"
 → Use `list_drafts` to see all available posts with IDs
@@ -152,6 +152,6 @@ If you see "API returned invalid data format", it usually means:
 ### "Everything is broken"
 → Clear cache and re-authenticate:
 ```bash
-rm -i ~/.substack-mcp-plus/auth.json ~/.substack-mcp-plus/.key
-substack-mcp-plus-setup
+rm -i ~/.substack-mcp/auth.json ~/.substack-mcp/.key
+substack-mcp-setup
 ```

@@ -1,4 +1,4 @@
-# Claude Desktop Test Checklist for Substack MCP Plus
+# Claude Desktop Test Checklist for Substack MCP
 
 ## Quick Test Order (Safest First)
 

@@ -1,4 +1,4 @@
-# ABOUTME: Main MCP server implementation for Substack MCP Plus
+# ABOUTME: Main MCP server implementation for Substack MCP.
 # ABOUTME: Provides tools for creating, updating, publishing posts with rich formatting
 
 import asyncio
@@ -38,7 +38,7 @@ class SubstackMCPServer:
 
     def __init__(self) -> None:
         """Initialize the MCP server"""
-        self.server = Server("substack-mcp-plus")
+        self.server = Server("substack-mcp")
         self._listed_tool_names: tuple[str, ...] = ()
         self._dispatch_tool_names: tuple[str, ...] = ()
         self._confirmation_tokens: Dict[str, Dict[str, Any]] = {}
@@ -2002,7 +2002,7 @@ class SubstackMCPServer:
                 read_stream,
                 write_stream,
                 InitializationOptions(
-                    server_name="substack-mcp-plus",
+                    server_name="substack-mcp",
                     server_version=SERVER_VERSION,
                     capabilities=self.server.get_capabilities(
                         NotificationOptions(),

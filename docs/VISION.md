@@ -1,4 +1,4 @@
-# The Vision for Substack MCP Plus
+# The Vision for Substack MCP
 
 ## 🎯 Why I Maintain This
 

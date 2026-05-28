@@ -1,6 +1,6 @@
 # Test Suite Documentation
 
-This directory contains all tests for the Substack MCP Plus project. We practice Test-Driven Development (TDD) to ensure code quality and reliability.
+This directory contains all tests for the Substack MCP project. We practice Test-Driven Development (TDD) to ensure code quality and reliability.
 
 ## Test Structure
 

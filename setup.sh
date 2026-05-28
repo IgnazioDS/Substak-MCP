@@ -1,5 +1,5 @@
 #!/bin/bash
-# Substack MCP Plus - Quick Setup Script
+# Substack MCP - Quick Setup Script
 # This script sets up your development environment automatically
 
 set -e  # Exit on error
@@ -13,7 +13,7 @@ NC='\033[0m' # No Color
 
 # Header
 echo -e "${BLUE}================================================${NC}"
-echo -e "${BLUE}   Substack MCP Plus - Environment Setup${NC}"
+echo -e "${BLUE}   Substack MCP - Environment Setup${NC}"
 echo -e "${BLUE}================================================${NC}"
 echo ""
 

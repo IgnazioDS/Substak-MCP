@@ -1,11 +1,11 @@
-# Claude Desktop MCP Test Checklist for Substack MCP Plus v1.0.3
+# Claude Desktop MCP Test Checklist for Substack MCP v1.0.3
 
 ## Pre-Test Setup
 
 1. **Clean Installation**
    ```bash
    # Uninstall current version
-   npm uninstall -g substack-mcp-plus
+   npm uninstall -g @ignaziods/substack-mcp
    
    # Clear npm cache
    npm cache clean --force
@@ -16,18 +16,18 @@
 
 2. **Verify Installation**
    ```bash
-   which substack-mcp-plus
-   # Should show: /opt/homebrew/bin/substack-mcp-plus
+   which substack-mcp
+   # Should show: /opt/homebrew/bin/substack-mcp
    ```
 
 3. **Configure Claude Desktop**
-   - Remove existing substack-mcp-plus entry from Claude Desktop config
+   - Remove existing substack-mcp entry from Claude Desktop config
    - Re-add with fresh configuration:
    ```json
    {
      "mcpServers": {
-       "substack-mcp-plus": {
-         "command": "/opt/homebrew/bin/substack-mcp-plus",
+       "substack-mcp": {
+         "command": "/opt/homebrew/bin/substack-mcp",
          "env": {
            "SUBSTACK_PUBLICATION_URL": "https://neroaugustus.substack.com/"
          }
@@ -40,7 +40,7 @@
 4. **Authentication Setup**
    ```bash
    # Run setup command
-   substack-mcp-plus-setup
+   substack-mcp-setup
    
    # Should open browser for authentication
    # Complete login process
@@ -160,14 +160,14 @@ def hello():
 ## Error Handling Tests
 
 ### Test Authentication Errors
-1. **Test**: Temporarily rename ~/.substack-mcp-plus/auth.json
+1. **Test**: Temporarily rename ~/.substack-mcp/auth.json
    ```bash
-   mv ~/.substack-mcp-plus/auth.json ~/.substack-mcp-plus/auth.json.bak
+   mv ~/.substack-mcp/auth.json ~/.substack-mcp/auth.json.bak
    ```
 2. Try "list drafts" - should show authentication error
 3. Restore file:
    ```bash
-   mv ~/.substack-mcp-plus/auth.json.bak ~/.substack-mcp-plus/auth.json
+   mv ~/.substack-mcp/auth.json.bak ~/.substack-mcp/auth.json
    ```
 
 ### Test Invalid Post IDs
@@ -216,7 +216,7 @@ def hello():
 
 1. **Check Logs**
    ```bash
-   tail -100 ~/Library/Logs/Claude/mcp-server-substack-mcp-plus.log
+   tail -100 ~/Library/Logs/Claude/mcp-server-substack-mcp.log
    ```
    - [ ] No Python tracebacks
    - [ ] No "ERROR" level messages (except for tested errors)

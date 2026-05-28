@@ -28,7 +28,7 @@ async def test_claude_desktop_integration():
         print("\n🔧 Step 1: Initializing MCP Server...")
         server = SubstackMCPServer()
         print("✅ MCP Server initialized successfully")
-        print(f"   Server name: substack-mcp-plus")
+        print(f"   Server name: substack-mcp")
         print(f"   Handlers: {type(server.auth_handler).__name__}")
 
         # Test all tools are available
@@ -89,7 +89,7 @@ This post was created through our **MCP server integration** with Claude Desktop
 # This represents the MCP integration
 class ClaudeDesktopIntegration:
     def __init__(self):
-        self.mcp_server = "substack-mcp-plus"
+        self.mcp_server = "substack-mcp"
         self.tools = 7
         self.status = "fully_operational"
     
@@ -256,8 +256,8 @@ This update was added through the update_post tool to verify modification capabi
                 with open(config_path, "r") as f:
                     config = json.load(f)
 
-                if "substack-mcp-plus" in config.get("mcpServers", {}):
-                    server_config = config["mcpServers"]["substack-mcp-plus"]
+                if "substack-mcp" in config.get("mcpServers", {}):
+                    server_config = config["mcpServers"]["substack-mcp"]
                     print(f"✅ MCP server configuration verified:")
                     print(f"   Command: {server_config.get('command', 'Not found')}")
                     print(f"   Args: {server_config.get('args', [])}")
@@ -268,7 +268,7 @@ This update was added through the update_post tool to verify modification capabi
                     if "SUBSTACK_PUBLICATION_URL" in env_vars:
                         print(f"   ✅ Publication URL configured")
                 else:
-                    print(f"⚠️ substack-mcp-plus not found in Claude Desktop config")
+                    print(f"⚠️ substack-mcp not found in Claude Desktop config")
 
             except Exception as e:
                 print(f"⚠️ Could not read config: {str(e)[:100]}...")

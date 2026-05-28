@@ -27,7 +27,7 @@ async def create_fixed_comprehensive_test():
     # Create comprehensive test content with ALL formatting types
     content = """# 🎯 FIXED Comprehensive Markdown Test
 
-Welcome to the **FIXED** comprehensive test of all markdown formatting features! This post demonstrates that our Substack MCP Plus server now works correctly with the python-substack library.
+Welcome to the **FIXED** comprehensive test of all markdown formatting features! This post demonstrates that our Substack MCP server now works correctly with the python-substack library.
 
 ## Text Formatting Showcase
 
@@ -139,7 +139,7 @@ Here's a JavaScript/Node.js example:
 
 ```javascript
 /*
- * Substack MCP Plus - JavaScript Integration Example
+ * Substack MCP - JavaScript Integration Example
  */
 
 class SubstackConnector {
@@ -308,7 +308,7 @@ This ensures proper content monetization and subscriber value delivery.
 
 ## Comprehensive Testing Summary
 
-This comprehensive test post demonstrates **ALL** the markdown formatting capabilities of our Substack MCP Plus server:
+This comprehensive test post demonstrates **ALL** the markdown formatting capabilities of our Substack MCP server:
 
 ### ✅ Successfully Tested Features:
 
@@ -334,7 +334,7 @@ This comprehensive test post demonstrates **ALL** the markdown formatting capabi
 
 ## Final Conclusion
 
-**🎉 Our Substack MCP Plus server is now fully functional and ready for production use!** 
+**🎉 Our Substack MCP server is now fully functional and ready for production use!** 
 
 This comprehensive test demonstrates that we've successfully:
 
@@ -344,7 +344,7 @@ This comprehensive test demonstrates that we've successfully:
 - ✅ **Enabled seamless Claude Desktop integration**
 - ✅ **Delivered professional-grade content creation tools**
 
-Thank you for testing our **Substack MCP Plus** server! 🚀✨
+Thank you for testing our **Substack MCP** server! 🚀✨
 
 ---
 

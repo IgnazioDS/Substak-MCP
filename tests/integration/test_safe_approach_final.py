@@ -110,7 +110,7 @@ These are acceptable trade-offs for 100% reliable content display.
 
 ---
 
-🎉 **The Substack MCP Plus server is ready for production use!**"""
+🎉 **The Substack MCP server is ready for production use!**"""
 
         print("📝 Creating final test post...")
 

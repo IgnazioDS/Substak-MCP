@@ -249,11 +249,12 @@ python3 -m pytest --cov=src --cov-report=term
 ## Project State Awareness
 
 Before starting ANY work:
-1. Check `docs/ROADMAP.md` for current priorities
+1. Check `docs/TODO.md` for current priorities and active tasks
 2. Check `docs/KNOWN_ISSUES.md` for existing problems
 3. Check `docs/COVERAGE_REPORT.md` for testing priorities
-4. Run `python3 -m pytest` to see current test status
-5. Use TodoRead to see any ongoing work
+4. Check `docs/VISION.md` for longer-term direction when planning larger work
+5. Run `python3 -m pytest` to see current test status
+6. Use TodoRead to see any ongoing work
 
 ## Starting a Work Session
 
