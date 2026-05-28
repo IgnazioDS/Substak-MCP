@@ -13,6 +13,7 @@ from urllib.robotparser import RobotFileParser
 
 import aiohttp
 from bs4 import BeautifulSoup, Tag
+
 from src.version import SERVER_VERSION
 
 logger = logging.getLogger(__name__)
