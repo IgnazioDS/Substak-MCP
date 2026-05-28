@@ -2,7 +2,6 @@
 # ABOUTME: Provides tools for creating, updating, publishing posts with rich formatting
 
 import asyncio
-import json
 import logging
 import secrets
 import sys
