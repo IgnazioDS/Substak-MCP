@@ -203,8 +203,8 @@ class StrategyHandler:
         my_themes = {item["theme"] for item in my_post_analysis.get("themes", [])}
         market_themes = {item["theme"] for item in research_results.get("themes", [])}
 
-        gaps = sorted(list(market_themes - my_themes))[:8]
-        overlaps = sorted(list(my_themes & market_themes))[:8]
+        gaps = sorted(market_themes - my_themes)[:8]
+        overlaps = sorted(my_themes & market_themes)[:8]
 
         return {
             "market_only_themes": gaps,
