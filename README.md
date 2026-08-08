@@ -325,6 +325,38 @@ substack-mcp-setup
 If Substack sent a sign-in email, paste the email link into the same setup
 browser window before closing it.
 
+### Magic-link email never arrives
+
+Substack's anti-bot layer sometimes silently drops the magic-link email when
+it is requested from the automated setup browser — no error is shown and the
+wizard waits forever. The fallback is manual session-cookie auth, which the
+server already supports through the `SUBSTACK_SESSION_TOKEN` environment
+variable:
+
+1. In your normal browser, already signed in to Substack, open
+   `https://substack.com`.
+2. Open DevTools → Application tab (Chrome) or Storage (Firefox/Safari) →
+   Cookies → `https://substack.com`.
+3. Copy the value of the `substack.sid` cookie. Either the decoded `s:...`
+   form or the URL-encoded `s%3A...` form works — the token is passed
+   directly as the cookie value.
+4. Set it as `SUBSTACK_SESSION_TOKEN` in your MCP client config alongside
+   `SUBSTACK_PUBLICATION_URL`. For Claude Code:
+
+   ```bash
+   claude mcp add substack --scope user \
+     --env SUBSTACK_PUBLICATION_URL=https://YOUR_PUBLICATION.substack.com \
+     --env SUBSTACK_SESSION_TOKEN=PASTED_COOKIE_VALUE \
+     -- substack-mcp
+   ```
+
+   For Claude Desktop and other clients, add both variables to the server's
+   `env` block instead.
+
+This cookie is password-equivalent — treat it like a secret. To revoke it,
+sign out of all sessions in your Substack account settings, then capture a
+fresh cookie.
+
 ### MCP shows connected but tools do not appear
 
 This is usually a client session cache issue.

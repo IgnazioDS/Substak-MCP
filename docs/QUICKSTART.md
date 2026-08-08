@@ -119,6 +119,7 @@ Upload image from https://picsum.photos/800/400 optimized for web
 | "No authentication found" | Run `substack-mcp-setup` |
 | CAPTCHA appears | Solve it in the browser window |
 | Email link opens elsewhere | Copy the link and paste it into the setup browser |
+| Magic-link email never arrives | Substack sometimes silently drops it for automated browsers — use the [session-token fallback](#session-token-if-you-have-one) |
 | Session expired | Run `substack-mcp-setup` again |
 | Import errors | Reinstall with `npm install -g github:IgnazioDS/Substak-MCP` |
 
@@ -141,10 +142,23 @@ export SUBSTACK_PUBLICATION_URL="https://YOUR_PUBLICATION.substack.com"
 ```
 
 ### Session Token (If you have one)
+
+This is also the reliable fallback when the wizard's magic-link email never
+arrives (Substack sometimes silently drops it for automated browsers). To get
+the token: in your normal signed-in browser open `https://substack.com`, then
+DevTools → Application (Chrome) / Storage (Firefox/Safari) → Cookies →
+`https://substack.com`, and copy the `substack.sid` cookie value (the `s:...`
+and `s%3A...` forms both work).
+
 ```bash
 export SUBSTACK_SESSION_TOKEN="YOUR_SUBSTACK_SESSION_TOKEN"
 export SUBSTACK_PUBLICATION_URL="https://YOUR_PUBLICATION.substack.com"
 ```
+
+This cookie is password-equivalent — treat it like a secret. Revoke it by
+signing out of all sessions in your Substack settings.
+
+Full walkthrough: [Authentication Guide](authentication.md#method-2-session-token-advanced).
 
 ## 📚 More Resources
 

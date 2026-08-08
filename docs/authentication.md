@@ -119,12 +119,26 @@ export SUBSTACK_PUBLICATION_URL="https://YOUR_PUBLICATION.substack.com"
 
 ### Method 2: Session Token (Advanced)
 
-If you already have a session token:
+Use this when the setup wizard cannot complete — most commonly when
+Substack's anti-bot layer silently drops the magic-link email requested from
+the automated browser (no error is shown; the wizard just waits).
+
+Grab the session cookie from a browser where you are already signed in:
+
+1. Open `https://substack.com` in your normal browser
+2. Open DevTools → **Application** tab (Chrome) or **Storage** (Firefox/Safari) → Cookies → `https://substack.com`
+3. Copy the value of the `substack.sid` cookie — the decoded `s:...` form and the URL-encoded `s%3A...` form both work, since the token is passed directly as the cookie value
+
+Then set it:
 
 ```env
-SUBSTACK_SESSION_TOKEN=YOUR_SUBSTACK_SESSION_TOKEN
+SUBSTACK_SESSION_TOKEN=PASTED_COOKIE_VALUE
 SUBSTACK_PUBLICATION_URL=https://YOUR_PUBLICATION.substack.com
 ```
+
+**Security note**: this cookie is password-equivalent — treat it like a
+secret. To revoke it, sign out of all sessions in your Substack account
+settings, then capture a fresh cookie.
 
 ## 🚨 Troubleshooting
 
@@ -143,6 +157,14 @@ The setup wizard handles CAPTCHA automatically. If you still have issues:
 **Solution**: Copy the email link and paste it into the browser window opened by
 `substack-mcp-setup`. The setup must see the final signed-in browser state
 before it can store the session.
+
+### Magic-Link Email Never Arrives
+Substack's anti-bot layer sometimes silently drops magic-link emails
+requested from the automated setup browser — no error appears and the wizard
+waits forever.
+
+**Solution**: Use the manual session-cookie fallback described in
+[Method 2: Session Token](#method-2-session-token-advanced).
 
 ### Session Expired
 **Solution**: Run `substack-mcp-setup` to refresh
