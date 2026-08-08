@@ -26,7 +26,7 @@ dependencies = [
     # python-substack wraps reverse-engineered/private behaviors, so we keep an
     # upper bound until each newer release is contract-tested against our fixtures.
     "python-substack>=0.1.20,<0.1.23",
-    "mcp>=1.10.0",
+    "mcp>=1.10.0,<2",  # mcp 2.0 removed the low-level Server.list_tools() decorator API
     "markdown2>=2.4.10",
     "pydantic>=2.5.0",
     "python-dotenv>=0.21.0,<1.0.0",

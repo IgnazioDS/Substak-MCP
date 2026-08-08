@@ -173,7 +173,7 @@ class SubstackAuthSetup:
                 # Navigate to Substack login
                 logger.info("Navigating to Substack login...")
                 await page.goto(
-                    "https://substack.com/sign-in", wait_until="networkidle"
+                    "https://substack.com/sign-in", wait_until="domcontentloaded"
                 )
 
                 # Use a manual-first flow because Substack's auth UI changes frequently,
